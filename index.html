@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2E8B57;
+            --secondary-color: #1e1e2f;
+            --accent-color: rgb(255, 215, 0);
+            --text-color: #ffffff;
+            --bg-color: #1e1e2f;
+            --card-bg: #2a2a40;
+            --input-bg: #3a3a50;
+            --profit-color: #3cff00;
+            --loss-color: #ff0033;
+            --deposit-color: #f1c40f;
+            --withdraw-color: #0746f6;
+            --warning-color: #FF9800;
+            --danger-color: #ec2020;
+            --success-color: #4CAF50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 15px 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        header img {
+            height: 60px;
+            width: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: var(--accent-color);
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-title {
+            font-size: 36px;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            background-size: cover;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            font-weight: 900;
+            margin: 0 0 0 auto;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: 20px;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        button i {
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-color), #e6c200);
+            color: var(--secondary-color);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #e6c200, var(--accent-color));
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--primary-color), #1e5631);
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #1e5631, var(--primary-color));
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-color), #e68a00);
+            color: var(--text-color);
+        }
+
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #e68a00, var(--warning-color));
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #c21807);
+            color: var(--text-color);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #c21807, var(--danger-color));
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #3d8b40);
+            color: var(--text-color);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #3d8b40, var(--success-color));
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .chart-section {
+            flex: 3;
+            min-width: 60%;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        #graph-container {
+            height: 400px;
+            background: var(--secondary-color);
+            border-radius: 10px;
+            padding: 15px;
+            position: relative;
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .chart-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .chart-legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+        }
+
+        .color-deposit { background: var(--deposit-color); }
+        .color-withdraw { background: var(--withdraw-color); }
+        .color-profit { background: var(--profit-color); }
+        .color-loss { background: var(--loss-color); }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .entry-section {
+            flex: 1;
+            min-width: 300px;
+            max-width: 400px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            margin-left: 20px;
+        }
+
+        .section-title {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: var(--accent-color);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--accent-color);
+        }
+
+        input, select {
+            width: calc(100% - 30px);
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3);
+            background: #42425a;
+        }
+
+        .stats-display {
+            margin: 20px 0;
+            padding: 15px;
+            background: var(--input-bg);
+            border-radius: 10px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-item {
+            margin: 10px 0;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat-label {
+            font-weight: 500;
+            color: #aaa;
+        }
+
+        .stat-value {
+            font-weight: 600;
+        }
+
+        .total-pl .stat-value {
+            color: var(--accent-color);
+        }
+
+        .total-capital .stat-value {
+            color: var(--profit-color);
+        }
+
+        .time-elapsed .stat-value {
+            color: #ffffff;
+            font-style: italic;
+        }
+
+        .history-section {
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            max-width: 1400px;
+            transition: all 0.3s ease;
+        }
+
+        .history-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #3a3a50;
+        }
+
+        th {
+            background: var(--primary-color);
+            color: var(--text-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        tr {
+            transition: background 0.2s ease;
+        }
+
+        tr:not(:first-child):hover {
+            background: #3a3a50;
+            transform: scale(1.01);
+        }
+
+        tr[data-type="deposit"] { color: var(--deposit-color); }
+        tr[data-type="withdraw"] { color: var(--withdraw-color); }
+        tr[data-type="profit"] { color: var(--profit-color); }
+        tr[data-type="loss"] { color: var(--loss-color); }
+
+        .type-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .badge-deposit {
+            background-color: rgba(241, 196, 15, 0.2);
+            color: var(--deposit-color);
+        }
+
+        .badge-withdraw {
+            background-color: rgba(7, 70, 246, 0.2);
+            color: var(--withdraw-color);
+        }
+
+        .badge-profit {
+            background-color: rgba(60, 255, 0, 0.2);
+            color: var(--profit-color);
+        }
+
+        .badge-loss {
+            background-color: rgba(255, 0, 51, 0.2);
+            color: var(--loss-color);
+        }
+
+        .amount-positive {
+            color: var(--profit-color);
+        }
+
+        .amount-negative {
+            color: var(--loss-color);
+        }
+
+        body.light-mode {
+            --text-color: #333333;
+            --bg-color: #f5f5f5;
+            --card-bg: #ffffff;
+            --input-bg: #f0f0f0;
+            --secondary-color: #e0e0e0;
+        }
+
+        body.light-mode header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        body.light-mode input,
+        body.light-mode select {
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+
+        body.light-mode .stats-display {
+            background: var(--input-bg);
+        }
+
+        body.light-mode tr:not(:first-child):hover {
+            background: #f0f0f0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--success-color);
+        }
+
+        .notification.warning {
+            background: var(--warning-color);
+        }
+
+        .notification.error {
+            background: var(--danger-color);
+        }
+
+        .notification.info {
+            background: var(--withdraw-color);
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            margin: 20px auto;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid var(--accent-color);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #graph-container:fullscreen {
+            width: 100% !important;
+            height: 100% !important;
+            background: var(--secondary-color);
+            padding: 20px;
+        }
+
+        .fullscreen-exit {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: none;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+
+        #graph-container:fullscreen .fullscreen-exit {
+            display: block;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .chart-section, .entry-section {
+                width: 100%;
+                max-width: 100%;
+                margin-left: 0;
+            }
+            
+            .header-title {
+                font-size: 28px;
+                margin: 10px 0;
+                order: 3;
+                width: 100%;
+                text-align: center;
+            }
+            
+            .header-controls {
+                margin-left: 0;
+                order: 2;
+            }
+            
+            .logo-container {
+                order: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 24px;
+            }
+            
+            header h1 {
+                font-size: 20px;
+            }
+            
+            header img {
+                height: 50px;
+                width: 50px;
+            }
+            
+            .button-group, .history-controls {
+                justify-content: center;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+            
+            th, td {
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 20px;
+            }
+            
+            header h1 {
+                font-size: 18px;
+            }
+            
+            button {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            
+            .section-title {
+                font-size: 18px;
+            }
+            
+            input, select {
+                padding: 10px 12px;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="logo2.png" alt="Logo" id="logo">
+            <h1>Candle Time</h1>
+        </div>
+        <h2 class="header-title">Transaction Tracker</h2>
+        <div class="header-controls">
+            <button class="btn-secondary theme-toggle-btn" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i> Toggle Theme
+            </button>
+            <button class="btn-danger" id="deleteDataBtn">
+                <i class="fas fa-trash-alt"></i> Clear All
+            </button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="chart-section fade-in">
+            <h3 class="section-title">Capital Flow</h3>
+            <div id="graph-container">
+                <canvas id="profitLossChart"></canvas>
+                <div class="spinner" id="chartSpinner"></div>
+                <button class="fullscreen-exit" onclick="exitFullscreen()">
+                    <i class="fas fa-times"></i> Exit Fullscreen
+                </button>
+            </div>
+            <div class="chart-legend">
+                <div class="chart-legend-item">
+                    <div class="chart-legend-color color-deposit"></div>
+                    <span>Deposit</span>
+                </div>
+                <div class="chart-legend-item">
+                    <div class="chart-legend-color color-withdraw"></div>
+                    <span>Withdraw</span>
+                </div>
+                <div class="chart-legend-item">
+                    <div class="chart-legend-color color-profit"></div>
+                    <span>Profit</span>
+                </div>
+                <div class="chart-legend-item">
+                    <div class="chart-legend-color color-loss"></div>
+                    <span>Loss</span>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn-primary" onclick="toggleFullscreen('graph-container')">
+                    <i class="fas fa-expand"></i> Fullscreen
+                </button>
+                <button class="btn-secondary" onclick="toggleFullHistory()">
+                    <i class="fas fa-chart-line"></i> Toggle View
+                </button>
+                <button id="toggleHistoryBtn" class="btn-warning" onclick="toggleHistorySection()">
+                    <i class="fas fa-eye-slash"></i> Hide History
+                </button>
+                <button class="btn-success" onclick="exportData()">
+                    <i class="fas fa-file-export"></i> Export Data
+                </button>
+            </div>
+        </div>
+
+        <div class="entry-section fade-in">
+            <h3 class="section-title">New Transaction</h3>
+            <div class="form-group">
+                <label for="dateSelection">Date:</label>
+                <input type="date" id="dateSelection">
+            </div>
+            
+            <div class="form-group">
+                <label for="transactionType">Transaction Type:</label>
+                <select id="transactionType">
+                    <option value="deposit">Deposit</option>
+                    <option value="withdraw">Withdraw</option>
+                    <option value="profit">Profit</option>
+                    <option value="loss">Loss</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="amountInput">Amount ($):</label>
+                <input type="number" id="amountInput" min="0" step="0.01" placeholder="Enter amount">
+            </div>
+            
+            <div class="form-group">
+                <label for="descriptionInput">Description (Optional):</label>
+                <input type="text" id="descriptionInput" placeholder="Enter description">
+            </div>
+
+            <button class="btn-primary" onclick="submitTransaction()">
+                <i class="fas fa-plus-circle"></i> Submit
+            </button>
+
+            <div class="stats-display">
+                <div class="stat-item time-elapsed">
+                    <span class="stat-label">Time Elapsed:</span>
+                    <span class="stat-value" id="timeElapsed">0 days</span>
+                </div>
+                <div class="stat-item total-pl">
+                    <span class="stat-label">Total Balance:</span>
+                    <span class="stat-value" id="totalPL">$0.00</span>
+                </div>
+                <div class="stat-item total-capital">
+                    <span class="stat-label">Pure P&L:</span>
+                    <span class="stat-value" id="totalCapital">$0.00</span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-warning" onclick="undoTransaction()">
+                    <i class="fas fa-undo"></i> Undo
+                </button>
+                <button class="btn-secondary" onclick="redoTransaction()">
+                    <i class="fas fa-redo"></i> Redo
+                </button>
+                <button class="btn-secondary" onclick="refreshPage()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="history-section fade-in" id="historySection">
+        <h3 class="section-title">Transaction History</h3>
+        <div class="history-controls">
+            <button class="btn-secondary" onclick="filterTransactions('all')">
+                <i class="fas fa-list"></i> Show All
+            </button>
+            <button class="btn-secondary" onclick="filterTransactions('profit')">
+                <i class="fas fa-arrow-up"></i> Profits
+            </button>
+            <button class="btn-secondary" onclick="filterTransactions('loss')">
+                <i class="fas fa-arrow-down"></i> Losses
+            </button>
+            <button class="btn-secondary" onclick="filterTransactions('deposit')">
+                <i class="fas fa-money-bill-wave"></i> Deposits
+            </button>
+            <button class="btn-secondary" onclick="filterTransactions('withdraw')">
+                <i class="fas fa-hand-holding-usd"></i> Withdrawals
+            </button>
+            <button class="btn-success" onclick="exportCSV()">
+                <i class="fas fa-file-csv"></i> Export CSV
+            </button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Balance</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="historyTableBody"></tbody>
+        </table>
+        <div class="spinner" id="tableSpinner"></div>
+    </div>
+
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-message">Transaction submitted successfully!</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+    <script>
+        // Initialize data from localStorage or defaults
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+        let graphLabels = JSON.parse(localStorage.getItem('graphLabels')) || [];
+        let graphData = JSON.parse(localStorage.getItem('graphData')) || [];
+        let totalPL = localStorage.getItem('totalPL') ? parseFloat(localStorage.getItem('totalPL')) : 0;
+        let totalCapital = localStorage.getItem('totalCapital') ? parseFloat(localStorage.getItem('totalCapital')) : 0;
+        let firstTransactionDate = localStorage.getItem('firstTransactionDate');
+        let undoStack = JSON.parse(localStorage.getItem('undoStack')) || [];
+        let redoStack = JSON.parse(localStorage.getItem('redoStack')) || [];
+        let isFullHistory = localStorage.getItem('isFullHistory') === 'true';
+        const MAX_TRANSACTIONS_IN_VIEW = 10;
+        let profitLossChart;
+
+        // Initialize Dashboard
+        function initializeDashboard() {
+            setupChart();
+            setupEventListeners();
+            recalculateAllBalances();
+            updateUI();
+            document.getElementById('dateSelection').valueAsDate = new Date();
+        }
+
+        function setupChart() {
+            const ctx = document.getElementById('profitLossChart').getContext('2d');
+            
+            if (profitLossChart) {
+                profitLossChart.destroy();
+            }
+            
+            profitLossChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: isFullHistory ? graphLabels : graphLabels.slice(-MAX_TRANSACTIONS_IN_VIEW),
+                    datasets: [{
+                        label: 'Capital Flow',
+                        data: isFullHistory ? graphData : calculateRunningBalance(transactions.slice(-MAX_TRANSACTIONS_IN_VIEW)),
+                        borderWidth: 3,
+                        fill: false,
+                        tension: 0.1,
+                        segment: {
+                            borderColor: ctx => {
+                                const index = ctx.p0DataIndex;
+                                const showFull = isFullHistory || transactions.length <= MAX_TRANSACTIONS_IN_VIEW;
+                                const transactionIndex = showFull ? index : 
+                                    Math.max(0, transactions.length - MAX_TRANSACTIONS_IN_VIEW) + index;
+                                
+                                const transaction = transactions[transactionIndex];
+                                switch(transaction?.type) {
+                                    case 'deposit': return 'var(--deposit-color)';
+                                    case 'withdraw': return 'var(--withdraw-color)';
+                                    case 'profit': return 'var(--profit-color)';
+                                    case 'loss': return 'var(--loss-color)';
+                                    default: return 'var(--deposit-color)';
+                                }
+                            }
+                        }
+                    }]
+                },
+                options: getChartOptions()
+            });
+        }
+
+        function calculateRunningBalance(transactionsToShow) {
+            let runningBalance = 0;
+            
+            // Find starting balance before these transactions
+            const firstIndex = transactions.findIndex(t => 
+                t.date === transactionsToShow[0].date && 
+                t.amount === transactionsToShow[0].amount
+            );
+            
+            if (firstIndex > 0) {
+                runningBalance = graphData[firstIndex - 1];
+            }
+            
+            return transactionsToShow.map(t => {
+                switch(t.type) {
+                    case 'profit':
+                        runningBalance += t.amount;
+                        break;
+                    case 'loss':
+                        runningBalance -= t.amount;
+                        break;
+                    case 'deposit':
+                        runningBalance += t.amount;
+                        break;
+                    case 'withdraw':
+                        runningBalance -= t.amount;
+                        break;
+                }
+                return runningBalance;
+            });
+        }
+
+        function recalculateAllBalances() {
+            let runningPL = 0;
+            let runningCapital = 0;
+            graphLabels = [];
+            graphData = [];
+            
+            transactions.forEach((t, index) => {
+                switch(t.type) {
+                    case 'profit':
+                        runningPL += t.amount;
+                        runningCapital += t.amount;
+                        break;
+                    case 'loss':
+                        runningPL -= t.amount;
+                        runningCapital -= t.amount;
+                        break;
+                    case 'deposit':
+                        runningPL += t.amount;
+                        break;
+                    case 'withdraw':
+                        runningPL -= t.amount;
+                        break;
+                }
+                graphLabels[index] = t.date;
+                graphData[index] = runningPL;
+            });
+            
+            totalPL = runningPL;
+            totalCapital = runningCapital;
+            saveState();
+        }
+
+        function getChartOptions() {
+            return {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'var(--card-bg)',
+                        titleColor: 'var(--accent-color)',
+                        bodyColor: 'var(--text-color)',
+                        borderColor: 'var(--accent-color)',
+                        borderWidth: 1,
+                        padding: 12,
+                        callbacks: {
+                            label: function(context) {
+                                const transactionIndex = isFullHistory ? 
+                                    context.dataIndex : 
+                                    Math.max(0, transactions.length - MAX_TRANSACTIONS_IN_VIEW) + context.dataIndex;
+                                
+                                if (transactionIndex >= transactions.length) return ["Invalid transaction"];
+                                
+                                const transaction = transactions[transactionIndex];
+                                return [
+                                    `Type: ${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}`,
+                                    `Amount: $${transaction.amount.toFixed(2)}`,
+                                    transaction.description ? `Note: ${transaction.description}` : '',
+                                    `Balance: $${context.parsed.y.toFixed(2)}`
+                                ].filter(Boolean);
+                            }
+                        }
+                    },
+                    zoom: {
+                        zoom: {
+                            wheel: {
+                                enabled: true
+                            },
+                            pinch: {
+                                enabled: true
+                            },
+                            mode: 'xy'
+                        },
+                        pan: {
+                            enabled: true,
+                            mode: 'xy'
+                        }
+                    },
+                    annotation: {
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                yMin: 0,
+                                yMax: 0,
+                                borderColor: 'var(--text-color)',
+                                borderWidth: 1,
+                                borderDash: [6, 6]
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: 'var(--text-color)'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: 'var(--text-color)',
+                            callback: function(value) {
+                                return '$' + value;
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
+        function setupEventListeners() {
+            document.getElementById('deleteDataBtn').addEventListener('click', confirmDeleteAllData);
+            document.getElementById('amountInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') submitTransaction();
+            });
+        }
+
+        function saveState() {
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            localStorage.setItem('graphLabels', JSON.stringify(graphLabels));
+            localStorage.setItem('graphData', JSON.stringify(graphData));
+            localStorage.setItem('totalPL', totalPL);
+            localStorage.setItem('totalCapital', totalCapital);
+            localStorage.setItem('firstTransactionDate', firstTransactionDate || '');
+            localStorage.setItem('undoStack', JSON.stringify(undoStack));
+            localStorage.setItem('redoStack', JSON.stringify(redoStack));
+            localStorage.setItem('isFullHistory', isFullHistory);
+        }
+
+        function submitTransaction() {
+            let date = document.getElementById('dateSelection').value || new Date().toISOString().split('T')[0];
+            let type = document.getElementById('transactionType').value;
+            let amount = parseFloat(document.getElementById('amountInput').value);
+            let description = document.getElementById('descriptionInput').value || '';
+
+            if (!type || isNaN(amount) || amount <= 0) {
+                showNotification('Please enter a valid positive amount', 'error');
+                return;
+            }
+
+            if (type === 'withdraw' && amount > totalPL) {
+                showNotification('Insufficient balance for withdrawal!', 'error');
+                return;
+            }
+
+            saveToUndoStack();
+            redoStack = [];
+            processTransaction(type, amount);
+
+            if (!firstTransactionDate) {
+                firstTransactionDate = date;
+            }
+
+            transactions.push({ date, type, amount, description });
+            graphLabels.push(date);
+            graphData.push(totalPL);
+
+            saveState();
+            updateUI();
+            showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} of $${amount.toFixed(2)} recorded!`);
+            resetForm();
+        }
+
+        function saveToUndoStack() {
+            undoStack.push({
+                transactions: [...transactions],
+                graphLabels: [...graphLabels],
+                graphData: [...graphData],
+                totalPL: totalPL,
+                totalCapital: totalCapital,
+                firstTransactionDate: firstTransactionDate
+            });
+        }
+
+        function processTransaction(type, amount) {
+            switch(type) {
+                case 'profit':
+                    totalPL += amount;
+                    totalCapital += amount;
+                    break;
+                case 'loss':
+                    totalPL -= amount;
+                    totalCapital -= amount;
+                    break;
+                case 'deposit':
+                    totalPL += amount;
+                    break;
+                case 'withdraw':
+                    totalPL -= amount;
+                    break;
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('amountInput').value = '';
+            document.getElementById('descriptionInput').value = '';
+            document.getElementById('amountInput').focus();
+        }
+
+        function updateUI() {
+            updateChart();
+            updateHistoryTable();
+            updateStats();
+        }
+
+        function updateChart() {
+            const showFullHistory = isFullHistory || transactions.length <= MAX_TRANSACTIONS_IN_VIEW;
+            const labelsToShow = showFullHistory ? graphLabels : graphLabels.slice(-MAX_TRANSACTIONS_IN_VIEW);
+            const dataToShow = showFullHistory ? graphData : calculateRunningBalance(transactions.slice(-MAX_TRANSACTIONS_IN_VIEW));
+
+            profitLossChart.data.labels = labelsToShow;
+            profitLossChart.data.datasets[0].data = dataToShow;
+            profitLossChart.update();
+        }
+
+        function updateHistoryTable() {
+            let historyHtml = '';
+            const transactionsToShow = isFullHistory ? transactions : transactions.slice(-MAX_TRANSACTIONS_IN_VIEW);
+
+            transactionsToShow.forEach((t, index) => {
+                const globalIndex = transactions.findIndex(tr => 
+                    tr.date === t.date && 
+                    tr.amount === t.amount && 
+                    tr.type === t.type
+                );
+                const balanceAtTransaction = graphData[globalIndex];
+                const badgeClass = `badge-${t.type}`;
+                
+                historyHtml += `<tr data-type="${t.type}">
+                    <td>${t.date}</td>
+                    <td><span class="type-badge ${badgeClass}">${t.type}</span></td>
+                    <td>${t.description || '-'}</td>
+                    <td class="${t.type === 'profit' || t.type === 'deposit' ? 'amount-positive' : 'amount-negative'}">
+                        ${t.type === 'profit' || t.type === 'deposit' ? '+' : '-'}$${t.amount.toFixed(2)}
+                    </td>
+                    <td>$${balanceAtTransaction ? balanceAtTransaction.toFixed(2) : '0.00'}</td>
+                    <td>
+                        <button class="btn-warning btn-sm" onclick="editTransaction(${globalIndex})" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-danger btn-sm" onclick="deleteTransaction(${globalIndex})" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`;
+            });
+
+            document.getElementById('historyTableBody').innerHTML = historyHtml;
+        }
+
+        function updateStats() {
+            updateTimeElapsed();
+            updateTotalPL();
+            updateTotalCapital();
+        }
+
+        function updateTimeElapsed() {
+            if (!firstTransactionDate) {
+                document.getElementById('timeElapsed').textContent = 'No transactions yet';
+                return;
+            }
+
+            const firstDate = new Date(firstTransactionDate);
+            const today = new Date();
+            const diffTime = today - firstDate;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            document.getElementById('timeElapsed').textContent = `${diffDays} days`;
+        }
+
+        function updateTotalPL() {
+            document.getElementById('totalPL').textContent = `$${totalPL.toFixed(2)}`;
+        }
+
+        function updateTotalCapital() {
+            document.getElementById('totalCapital').textContent = `$${totalCapital.toFixed(2)}`;
+        }
+
+        function filterTransactions(type) {
+            let filteredTransactions = type === 'all' ? transactions : transactions.filter(t => t.type === type);
+            let historyHtml = '';
+            
+            filteredTransactions.forEach((t, index) => {
+                const globalIndex = transactions.findIndex(tr => 
+                    tr.date === t.date && 
+                    tr.amount === t.amount && 
+                    tr.type === t.type
+                );
+                const balanceAtTransaction = graphData[globalIndex];
+                const badgeClass = `badge-${t.type}`;
+                
+                historyHtml += `<tr data-type="${t.type}">
+                    <td>${t.date}</td>
+                    <td><span class="type-badge ${badgeClass}">${t.type}</span></td>
+                    <td>${t.description || '-'}</td>
+                    <td class="${t.type === 'profit' || t.type === 'deposit' ? 'amount-positive' : 'amount-negative'}">
+                        ${t.type === 'profit' || t.type === 'deposit' ? '+' : '-'}$${t.amount.toFixed(2)}
+                    </td>
+                    <td>$${balanceAtTransaction ? balanceAtTransaction.toFixed(2) : '0.00'}</td>
+                    <td>
+                        <button class="btn-warning btn-sm" onclick="editTransaction(${globalIndex})" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-danger btn-sm" onclick="deleteTransaction(${globalIndex})" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`;
+            });
+
+            document.getElementById('historyTableBody').innerHTML = historyHtml;
+        }
+
+        function toggleFullHistory() {
+            isFullHistory = !isFullHistory;
+            saveState();
+            updateChart();
+            showNotification(isFullHistory ? "Showing full history" : "Showing recent transactions", "info");
+        }
+
+        function toggleHistorySection() {
+            const historySection = document.getElementById('historySection');
+            const toggleBtn = document.getElementById('toggleHistoryBtn');
+            
+            if (historySection.style.display === 'none') {
+                historySection.style.display = 'block';
+                toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Hide History';
+            } else {
+                historySection.style.display = 'none';
+                toggleBtn.innerHTML = '<i class="fas fa-eye"></i> Show History';
+            }
+        }
+
+        function toggleFullscreen(elementId) {
+            const element = document.getElementById(elementId);
+            if (!document.fullscreenElement) {
+                element.requestFullscreen?.() || 
+                element.mozRequestFullScreen?.() || 
+                element.webkitRequestFullscreen?.() || 
+                element.msRequestFullscreen?.();
+            } else {
+                document.exitFullscreen?.() || 
+                document.mozCancelFullScreen?.() || 
+                document.webkitExitFullscreen?.() || 
+                document.msExitFullscreen?.();
+            }
+        }
+
+        function exitFullscreen() {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+        }
+
+        function undoTransaction() {
+            if (undoStack.length > 0) {
+                redoStack.push({
+                    transactions: [...transactions],
+                    graphLabels: [...graphLabels],
+                    graphData: [...graphData],
+                    totalPL: totalPL,
+                    totalCapital: totalCapital,
+                    firstTransactionDate: firstTransactionDate
+                });
+
+                const previousState = undoStack.pop();
+                transactions = previousState.transactions;
+                graphLabels = previousState.graphLabels;
+                graphData = previousState.graphData;
+                totalPL = previousState.totalPL;
+                totalCapital = previousState.totalCapital;
+                firstTransactionDate = previousState.firstTransactionDate;
+
+                saveState();
+                updateUI();
+                showNotification("Undo successful", "success");
+            } else {
+                showNotification("Nothing to undo!", "warning");
+            }
+        }
+
+        function redoTransaction() {
+            if (redoStack.length > 0) {
+                undoStack.push({
+                    transactions: [...transactions],
+                    graphLabels: [...graphLabels],
+                    graphData: [...graphData],
+                    totalPL: totalPL,
+                    totalCapital: totalCapital,
+                    firstTransactionDate: firstTransactionDate
+                });
+
+                const nextState = redoStack.pop();
+                transactions = nextState.transactions;
+                graphLabels = nextState.graphLabels;
+                graphData = nextState.graphData;
+                totalPL = nextState.totalPL;
+                totalCapital = nextState.totalCapital;
+                firstTransactionDate = nextState.firstTransactionDate;
+
+                saveState();
+                updateUI();
+                showNotification("Redo successful", "success");
+            } else {
+                showNotification("Nothing to redo!", "warning");
+            }
+        }
+
+        function confirmDeleteAllData() {
+            if (confirm("Are you sure you want to delete ALL data? This cannot be undone!")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        function refreshPage() {
+            location.reload();
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light-mode' : '');
+            showNotification(`Theme set to ${document.body.classList.contains('light-mode') ? 'light' : 'dark'} mode`, "info");
+        }
+
+        function editTransaction(index) {
+            const transaction = transactions[index];
+            if (!transaction) return;
+
+            document.getElementById('dateSelection').value = transaction.date;
+            document.getElementById('transactionType').value = transaction.type;
+            document.getElementById('amountInput').value = transaction.amount;
+            document.getElementById('descriptionInput').value = transaction.description || '';
+
+            saveToUndoStack();
+            deleteTransaction(index, false);
+            showNotification("Transaction loaded for editing", "info");
+        }
+
+        function deleteTransaction(index, showNote = true) {
+            if (index < 0 || index >= transactions.length) return;
+
+            saveToUndoStack();
+            redoStack = [];
+
+            const deletedTransaction = transactions.splice(index, 1)[0];
+            recalculateAllBalances();
+
+            saveState();
+            updateUI();
+            if (showNote) showNotification("Transaction deleted", "success");
+        }
+
+        function exportData() {
+            const data = {
+                transactions: transactions,
+                stats: {
+                    totalPL: totalPL,
+                    totalCapital: totalCapital,
+                    firstTransactionDate: firstTransactionDate
+                }
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `transaction-data-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification("Data exported successfully", "success");
+        }
+
+        function exportCSV() {
+            let csv = 'Date,Type,Amount,Description,Balance\n';
+            
+            transactions.forEach((t, index) => {
+                const balanceAtTransaction = graphData[index];
+                csv += `${t.date},${t.type},${t.amount},"${t.description || ''}",${balanceAtTransaction}\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `transactions-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification("CSV exported successfully", "success");
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const notificationMessage = document.getElementById('notification-message');
+            
+            notification.className = `notification ${type}`;
+            notificationMessage.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.body.classList.add(savedTheme);
+            }
+            initializeDashboard();
+        };
+    </script>
+</body>
+</html>

@@ -806,8 +806,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
     <script>
         // Initialize data from localStorage or defaults
         let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
@@ -867,7 +865,69 @@
                         }
                     }]
                 },
-                options: getChartOptions()
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeOutQuart'
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'var(--card-bg)',
+                            titleColor: 'var(--accent-color)',
+                            bodyColor: 'var(--text-color)',
+                            borderColor: 'var(--accent-color)',
+                            borderWidth: 1,
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    const transactionIndex = isFullHistory ? 
+                                        context.dataIndex : 
+                                        Math.max(0, transactions.length - MAX_TRANSACTIONS_IN_VIEW) + context.dataIndex;
+                                    
+                                    if (transactionIndex >= transactions.length) return ["Invalid transaction"];
+                                    
+                                    const transaction = transactions[transactionIndex];
+                                    return [
+                                        `Type: ${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}`,
+                                        `Amount: $${transaction.amount.toFixed(2)}`,
+                                        transaction.description ? `Note: ${transaction.description}` : '',
+                                        `Balance: $${context.parsed.y.toFixed(2)}`
+                                    ].filter(Boolean);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'var(--text-color)'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'var(--text-color)',
+                                callback: function(value) {
+                                    return '$' + value;
+                                }
+                            }
+                        }
+                    }
+                }
             });
         }
 
@@ -933,99 +993,6 @@
             totalPL = runningPL;
             totalCapital = runningCapital;
             saveState();
-        }
-
-        function getChartOptions() {
-            return {
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'index'
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: 'var(--card-bg)',
-                        titleColor: 'var(--accent-color)',
-                        bodyColor: 'var(--text-color)',
-                        borderColor: 'var(--accent-color)',
-                        borderWidth: 1,
-                        padding: 12,
-                        callbacks: {
-                            label: function(context) {
-                                const transactionIndex = isFullHistory ? 
-                                    context.dataIndex : 
-                                    Math.max(0, transactions.length - MAX_TRANSACTIONS_IN_VIEW) + context.dataIndex;
-                                
-                                if (transactionIndex >= transactions.length) return ["Invalid transaction"];
-                                
-                                const transaction = transactions[transactionIndex];
-                                return [
-                                    `Type: ${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}`,
-                                    `Amount: $${transaction.amount.toFixed(2)}`,
-                                    transaction.description ? `Note: ${transaction.description}` : '',
-                                    `Balance: $${context.parsed.y.toFixed(2)}`
-                                ].filter(Boolean);
-                            }
-                        }
-                    },
-                    zoom: {
-                        zoom: {
-                            wheel: {
-                                enabled: true
-                            },
-                            pinch: {
-                                enabled: true
-                            },
-                            mode: 'xy'
-                        },
-                        pan: {
-                            enabled: true,
-                            mode: 'xy'
-                        }
-                    },
-                    annotation: {
-                        annotations: {
-                            line1: {
-                                type: 'line',
-                                yMin: 0,
-                                yMax: 0,
-                                borderColor: 'var(--text-color)',
-                                borderWidth: 1,
-                                borderDash: [6, 6]
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        },
-                        ticks: {
-                            color: 'var(--text-color)'
-                        }
-                    },
-                    y: {
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.1)'
-                        },
-                        ticks: {
-                            color: 'var(--text-color)',
-                            callback: function(value) {
-                                return '$' + value;
-                            }
-                        }
-                    }
-                }
-            };
         }
 
         function setupEventListeners() {

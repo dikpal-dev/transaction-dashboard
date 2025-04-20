@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Transaction Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -23,6 +23,10 @@
             --success-color: #4CAF50;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -31,27 +35,31 @@
             color: var(--text-color);
             overflow-x: hidden;
             transition: all 0.3s ease;
+            -webkit-text-size-adjust: 100%;
         }
 
         header {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            padding: 15px 30px;
+            padding: 15px 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             position: relative;
             z-index: 10;
+            gap: 10px;
         }
 
         .logo-container {
             display: flex;
             align-items: center;
             flex-grow: 1;
+            min-width: 200px;
         }
 
         header img {
-            height: 60px;
-            width: 60px;
+            height: 50px;
+            width: 50px;
             border-radius: 50%;
             margin-right: 15px;
             border: 2px solid var(--accent-color);
@@ -61,34 +69,43 @@
 
         header h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 20px;
             color: var(--accent-color);
             font-weight: 700;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
         }
 
         .header-title {
-            font-size: 36px;
+            font-size: 24px;
             background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
             background-size: cover;
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
             font-weight: 900;
-            margin: 0 0 0 auto;
+            margin: 0 auto;
             text-transform: uppercase;
             letter-spacing: 1px;
+            text-align: center;
+            flex-grow: 1;
+            order: 1;
+            width: 100%;
+            padding: 10px 0;
         }
 
         .header-controls {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-left: 20px;
+            gap: 10px;
+            margin-left: auto;
+            order: 2;
+            flex-wrap: wrap;
+            justify-content: flex-end;
         }
 
         button {
-            padding: 10px 18px;
+            padding: 12px 16px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
@@ -100,6 +117,8 @@
             justify-content: center;
             gap: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            min-width: 44px;
+            min-height: 44px;
         }
 
         button:hover {
@@ -163,35 +182,36 @@
 
         .container {
             display: flex;
-            justify-content: space-between;
-            padding: 20px;
-            gap: 20px;
+            flex-direction: column;
+            padding: 15px;
+            gap: 15px;
             max-width: 1400px;
             margin: 0 auto;
-            flex-wrap: wrap;
+            width: 100%;
         }
 
         .chart-section {
-            flex: 3;
-            min-width: 60%;
+            width: 100%;
             background: var(--card-bg);
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
+            order: 1;
         }
 
         #graph-container {
-            height: 400px;
+            height: 300px;
             background: var(--secondary-color);
             border-radius: 10px;
-            padding: 15px;
+            padding: 10px;
             position: relative;
+            width: 100%;
         }
 
         .chart-legend {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             margin-top: 15px;
             justify-content: center;
             flex-wrap: wrap;
@@ -218,30 +238,29 @@
 
         .button-group {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             margin-top: 15px;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .entry-section {
-            flex: 1;
-            min-width: 300px;
-            max-width: 400px;
+            width: 100%;
             background: var(--card-bg);
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
-            margin-left: 20px;
+            order: 2;
         }
 
         .section-title {
             margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 22px;
+            margin-bottom: 15px;
+            font-size: 20px;
             color: var(--accent-color);
             position: relative;
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
 
         .section-title::after {
@@ -265,19 +284,21 @@
             margin-bottom: 8px;
             font-weight: 500;
             color: var(--accent-color);
+            font-size: 14px;
         }
 
         input, select {
-            width: calc(100% - 30px);
+            width: 100%;
             padding: 12px 15px;
             margin-bottom: 5px;
             border: none;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 16px;
             background: var(--input-bg);
             color: var(--text-color);
             transition: all 0.3s ease;
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            -webkit-appearance: none;
         }
 
         input:focus, select:focus {
@@ -287,8 +308,8 @@
         }
 
         .stats-display {
-            margin: 20px 0;
-            padding: 15px;
+            margin: 15px 0;
+            padding: 12px;
             background: var(--input-bg);
             border-radius: 10px;
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -324,20 +345,23 @@
         }
 
         .history-section {
-            margin: 20px auto;
-            padding: 20px;
+            margin: 15px auto;
+            padding: 15px;
             background: var(--card-bg);
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             max-width: 1400px;
             transition: all 0.3s ease;
+            width: calc(100% - 30px);
+            overflow-x: auto;
         }
 
         .history-controls {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 15px;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         table {
@@ -346,12 +370,14 @@
             margin-top: 10px;
             border-radius: 8px;
             overflow: hidden;
+            min-width: 600px;
         }
 
         th, td {
-            padding: 14px 16px;
+            padding: 12px 10px;
             text-align: left;
             border-bottom: 1px solid #3a3a50;
+            font-size: 14px;
         }
 
         th {
@@ -361,6 +387,8 @@
             text-transform: uppercase;
             font-size: 14px;
             letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
         }
 
         tr {
@@ -369,7 +397,6 @@
 
         tr:not(:first-child):hover {
             background: #3a3a50;
-            transform: scale(1.01);
         }
 
         tr[data-type="deposit"] { color: var(--deposit-color); }
@@ -384,6 +411,7 @@
             font-size: 12px;
             font-weight: 600;
             text-transform: capitalize;
+            white-space: nowrap;
         }
 
         .badge-deposit {
@@ -412,6 +440,13 @@
 
         .amount-negative {
             color: var(--loss-color);
+        }
+
+        .btn-sm {
+            padding: 8px 10px;
+            min-width: 36px;
+            min-height: 36px;
+            font-size: 12px;
         }
 
         body.light-mode {
@@ -464,6 +499,7 @@
             gap: 10px;
             transform: translateX(150%);
             transition: transform 0.3s ease;
+            max-width: 90%;
         }
 
         .notification.show {
@@ -555,74 +591,97 @@
             display: block;
         }
 
-        @media (max-width: 1024px) {
+        /* Responsive adjustments */
+        @media (min-width: 768px) {
             .container {
-                flex-direction: column;
+                flex-direction: row;
+                padding: 20px;
+                gap: 20px;
             }
             
-            .chart-section, .entry-section {
-                width: 100%;
-                max-width: 100%;
-                margin-left: 0;
+            .chart-section {
+                flex: 3;
+                min-width: 60%;
+                order: 1;
+            }
+            
+            .entry-section {
+                flex: 1;
+                min-width: 300px;
+                max-width: 400px;
+                order: 2;
+            }
+            
+            header {
+                padding: 15px 30px;
+                flex-wrap: nowrap;
             }
             
             .header-title {
                 font-size: 28px;
-                margin: 10px 0;
-                order: 3;
-                width: 100%;
-                text-align: center;
+                width: auto;
+                order: 0;
+                padding: 0;
+                margin: 0 20px;
             }
             
             .header-controls {
-                margin-left: 0;
-                order: 2;
+                order: 0;
+                margin-left: 20px;
             }
             
-            .logo-container {
-                order: 1;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header-title {
-                font-size: 24px;
-            }
-            
-            header h1 {
-                font-size: 20px;
-            }
-            
-            header img {
-                height: 50px;
-                width: 50px;
-            }
-            
-            .button-group, .history-controls {
-                justify-content: center;
+            #graph-container {
+                height: 400px;
             }
             
             .section-title {
-                font-size: 20px;
+                font-size: 22px;
             }
             
-            th, td {
-                padding: 10px 12px;
-                font-size: 14px;
+            button {
+                padding: 10px 18px;
+            }
+            
+            .history-section {
+                padding: 20px;
+                margin: 20px auto;
+            }
+            
+            .history-controls {
+                gap: 10px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .header-title {
+                font-size: 36px;
+            }
+            
+            header h1 {
+                font-size: 24px;
+            }
+            
+            header img {
+                height: 60px;
+                width: 60px;
             }
         }
 
         @media (max-width: 480px) {
-            .header-title {
-                font-size: 20px;
+            header {
+                padding: 10px 15px;
             }
             
             header h1 {
                 font-size: 18px;
             }
             
+            .header-title {
+                font-size: 20px;
+            }
+            
             button {
-                padding: 8px 12px;
+                padding: 10px 12px;
                 font-size: 12px;
             }
             
@@ -632,11 +691,39 @@
             
             input, select {
                 padding: 10px 12px;
+                font-size: 14px;
             }
             
             th, td {
                 padding: 8px 10px;
                 font-size: 12px;
+            }
+            
+            .stats-display {
+                padding: 10px;
+            }
+            
+            .stat-item {
+                font-size: 14px;
+            }
+            
+            .button-group button, .history-controls button {
+                flex-grow: 1;
+            }
+        }
+
+        /* Orientation-specific adjustments */
+        @media screen and (orientation: landscape) and (max-width: 900px) {
+            #graph-container {
+                height: 250px;
+            }
+            
+            .container {
+                flex-direction: row;
+            }
+            
+            .entry-section {
+                max-width: 300px;
             }
         }
     </style>
@@ -804,11 +891,10 @@
         <i class="fas fa-check-circle"></i>
         <span id="notification-message">Transaction submitted successfully!</span>
     </div>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Initialize data from localStorage or defaults
-        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+         let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
         let graphLabels = JSON.parse(localStorage.getItem('graphLabels')) || [];
         let graphData = JSON.parse(localStorage.getItem('graphData')) || [];
         let totalPL = localStorage.getItem('totalPL') ? parseFloat(localStorage.getItem('totalPL')) : 0;
@@ -1402,7 +1488,7 @@
                 document.body.classList.add(savedTheme);
             }
             initializeDashboard();
-        };
+        }; 
     </script>
 </body>
 </html>

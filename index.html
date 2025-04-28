@@ -21,6 +21,8 @@
             --warning-color: #FF9800;
             --danger-color: #ec2020;
             --success-color: #4CAF50;
+            --canvas-bg: #808080;
+            --calendar-color: #f1c40f;
         }
 
         * {
@@ -202,7 +204,7 @@
 
         #graph-container {
             height: 300px;
-            background: var(--secondary-color);
+            background: var(--canvas-bg);
             border-radius: 10px;
             padding: 10px;
             position: relative;
@@ -277,6 +279,35 @@
         .form-group {
             margin-bottom: 15px;
             width: 100%;
+            position: relative;
+        }
+
+        .date-input-container {
+            position: relative;
+        }
+
+        .calendar-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--calendar-color);
+            pointer-events: none;
+        }
+
+        input[type="date"] {
+            padding-right: 35px;
+            width: 100%;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
         }
 
         label {
@@ -455,6 +486,8 @@
             --card-bg: #ffffff;
             --input-bg: #f0f0f0;
             --secondary-color: #e0e0e0;
+            --canvas-bg: #e0e0e0;
+            --calendar-color: #e67e22;
         }
 
         body.light-mode header {
@@ -530,8 +563,8 @@
         .tooltip .tooltiptext {
             visibility: hidden;
             width: 200px;
-            background-color: #333;
-            color: #fff;
+            background-color: #f8f8f8;
+            color: #333;
             text-align: center;
             border-radius: 6px;
             padding: 10px;
@@ -544,6 +577,8 @@
             transition: opacity 0.3s;
             font-size: 14px;
             font-weight: normal;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .tooltip:hover .tooltiptext {
@@ -570,7 +605,7 @@
         #graph-container:fullscreen {
             width: 100% !important;
             height: 100% !important;
-            background: var(--secondary-color);
+            background: var(--canvas-bg);
             padding: 20px;
         }
 
@@ -727,6 +762,7 @@
             }
         }
     </style>
+    <link rel="shortcut icon" href="logo2.png" type="image/x-icon">
 </head>
 <body>
     <header>
@@ -777,8 +813,8 @@
                 <button class="btn-primary" onclick="toggleFullscreen('graph-container')">
                     <i class="fas fa-expand"></i> Fullscreen
                 </button>
-                <button class="btn-secondary" onclick="toggleFullHistory()">
-                    <i class="fas fa-chart-line"></i> Toggle View
+                <button class="btn-secondary" id="toggleHistoryViewBtn" onclick="toggleFullHistory()">
+                    <i class="fas fa-chart-line"></i> Show Full
                 </button>
                 <button id="toggleHistoryBtn" class="btn-warning" onclick="toggleHistorySection()">
                     <i class="fas fa-eye-slash"></i> Hide History
@@ -793,7 +829,10 @@
             <h3 class="section-title">New Transaction</h3>
             <div class="form-group">
                 <label for="dateSelection">Date:</label>
-                <input type="date" id="dateSelection">
+                <div class="date-input-container">
+                    <input type="date" id="dateSelection">
+                    <i class="fas fa-calendar-alt calendar-icon"></i>
+                </div>
             </div>
             
             <div class="form-group">
@@ -816,7 +855,7 @@
                 <input type="text" id="descriptionInput" placeholder="Enter description">
             </div>
 
-            <button class="btn-primary" onclick="submitTransaction()">
+            <button class="btn-primary" id="submitBtn" onclick="submitTransaction()">
                 <i class="fas fa-plus-circle"></i> Submit
             </button>
 
@@ -852,7 +891,7 @@
     <div class="history-section fade-in" id="historySection">
         <h3 class="section-title">Transaction History</h3>
         <div class="history-controls">
-            <button class="btn-secondary" onclick="filterTransactions('all')">
+            <button class="btn-secondary" id="filterAllBtn">
                 <i class="fas fa-list"></i> Show All
             </button>
             <button class="btn-secondary" onclick="filterTransactions('profit')">
@@ -874,6 +913,7 @@
         <table>
             <thead>
                 <tr>
+                    <th>SN</th>
                     <th>Date</th>
                     <th>Type</th>
                     <th>Description</th>
@@ -894,7 +934,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-         let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
         let graphLabels = JSON.parse(localStorage.getItem('graphLabels')) || [];
         let graphData = JSON.parse(localStorage.getItem('graphData')) || [];
         let totalPL = localStorage.getItem('totalPL') ? parseFloat(localStorage.getItem('totalPL')) : 0;
@@ -903,8 +943,10 @@
         let undoStack = JSON.parse(localStorage.getItem('undoStack')) || [];
         let redoStack = JSON.parse(localStorage.getItem('redoStack')) || [];
         let isFullHistory = localStorage.getItem('isFullHistory') === 'true';
+        let currentFilter = localStorage.getItem('currentFilter') || 'all';
         const MAX_TRANSACTIONS_IN_VIEW = 10;
         let profitLossChart;
+        let currentlyEditingIndex = -1;
 
         // Initialize Dashboard
         function initializeDashboard() {
@@ -913,6 +955,8 @@
             recalculateAllBalances();
             updateUI();
             document.getElementById('dateSelection').valueAsDate = new Date();
+            updateToggleHistoryViewButton();
+            updateFilterButton();
         }
 
         function setupChart() {
@@ -967,10 +1011,10 @@
                             display: false
                         },
                         tooltip: {
-                            backgroundColor: 'var(--card-bg)',
-                            titleColor: 'var(--accent-color)',
-                            bodyColor: 'var(--text-color)',
-                            borderColor: 'var(--accent-color)',
+                            backgroundColor: '#ffffff',
+                            titleColor: '#333333',
+                            bodyColor: '#555555',
+                            borderColor: '#dddddd',
                             borderWidth: 1,
                             padding: 12,
                             callbacks: {
@@ -995,7 +1039,7 @@
                     scales: {
                         x: {
                             grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
+                                color: 'rgba(0, 0, 0, 0.5)'
                             },
                             ticks: {
                                 color: 'var(--text-color)'
@@ -1003,7 +1047,7 @@
                         },
                         y: {
                             grid: {
-                                color: 'rgba(255, 255, 255, 0.1)'
+                                color: 'rgba(0, 0, 0, 0.5)'
                             },
                             ticks: {
                                 color: 'var(--text-color)',
@@ -1081,10 +1125,88 @@
             saveState();
         }
 
+        function updateHistoryTable() {
+            let historyHtml = '';
+            const transactionsToShow = isFullHistory ? transactions : transactions.slice(-MAX_TRANSACTIONS_IN_VIEW);
+
+            transactionsToShow.forEach((t, index) => {
+                const globalIndex = isFullHistory ? index : transactions.length - MAX_TRANSACTIONS_IN_VIEW + index;
+                const balanceAtTransaction = graphData[globalIndex];
+                const badgeClass = `badge-${t.type}`;
+                const sn = index + 1; // Always starts at 1 for current view
+                
+                historyHtml += `<tr data-type="${t.type}">
+                    <td>${sn}</td>
+                    <td>${t.date}</td>
+                    <td><span class="type-badge ${badgeClass}">${t.type}</span></td>
+                    <td>${t.description || '-'}</td>
+                    <td class="${t.type === 'profit' || t.type === 'deposit' ? 'amount-positive' : 'amount-negative'}">
+                        ${t.type === 'profit' || t.type === 'deposit' ? '+' : '-'}$${t.amount.toFixed(2)}
+                    </td>
+                    <td>$${balanceAtTransaction ? balanceAtTransaction.toFixed(2) : '0.00'}</td>
+                    <td>
+                        <button class="btn-warning btn-sm" onclick="editTransaction(${globalIndex})" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-danger btn-sm" onclick="deleteTransaction(${globalIndex})" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`;
+            });
+
+            document.getElementById('historyTableBody').innerHTML = historyHtml;
+        }
+
+        function filterTransactions(type) {
+            currentFilter = type;
+            updateFilterButton();
+            
+            let filteredTransactions = type === 'all' ? transactions : transactions.filter(t => t.type === type);
+            let historyHtml = '';
+            
+            filteredTransactions.forEach((t, index) => {
+                const globalIndex = transactions.indexOf(t); // For edit/delete operations
+                const balanceAtTransaction = graphData[globalIndex];
+                const badgeClass = `badge-${t.type}`;
+                const sn = index + 1; // Always starts at 1 for filtered view
+                
+                historyHtml += `<tr data-type="${t.type}">
+                    <td>${sn}</td>
+                    <td>${t.date}</td>
+                    <td><span class="type-badge ${badgeClass}">${t.type}</span></td>
+                    <td>${t.description || '-'}</td>
+                    <td class="${t.type === 'profit' || t.type === 'deposit' ? 'amount-positive' : 'amount-negative'}">
+                        ${t.type === 'profit' || t.type === 'deposit' ? '+' : '-'}$${t.amount.toFixed(2)}
+                    </td>
+                    <td>$${balanceAtTransaction ? balanceAtTransaction.toFixed(2) : '0.00'}</td>
+                    <td>
+                        <button class="btn-warning btn-sm" onclick="editTransaction(${globalIndex})" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-danger btn-sm" onclick="deleteTransaction(${globalIndex})" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`;
+            });
+
+            document.getElementById('historyTableBody').innerHTML = historyHtml;
+        }
+
         function setupEventListeners() {
             document.getElementById('deleteDataBtn').addEventListener('click', confirmDeleteAllData);
             document.getElementById('amountInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') submitTransaction();
+                if (e.key === 'Enter') {
+                    if (currentlyEditingIndex >= 0) {
+                        saveEditedTransaction();
+                    } else {
+                        submitTransaction();
+                    }
+                }
+            });
+            document.getElementById('filterAllBtn').addEventListener('click', function() {
+                filterTransactions('all');
             });
         }
 
@@ -1098,6 +1220,7 @@
             localStorage.setItem('undoStack', JSON.stringify(undoStack));
             localStorage.setItem('redoStack', JSON.stringify(redoStack));
             localStorage.setItem('isFullHistory', isFullHistory);
+            localStorage.setItem('currentFilter', currentFilter);
         }
 
         function submitTransaction() {
@@ -1167,6 +1290,13 @@
         function resetForm() {
             document.getElementById('amountInput').value = '';
             document.getElementById('descriptionInput').value = '';
+            document.getElementById('dateSelection').valueAsDate = new Date();
+            currentlyEditingIndex = -1;
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Submit';
+            submitBtn.onclick = submitTransaction;
+            
             document.getElementById('amountInput').focus();
         }
 
@@ -1174,6 +1304,8 @@
             updateChart();
             updateHistoryTable();
             updateStats();
+            updateToggleHistoryViewButton();
+            updateFilterButton();
         }
 
         function updateChart() {
@@ -1186,39 +1318,22 @@
             profitLossChart.update();
         }
 
-        function updateHistoryTable() {
-            let historyHtml = '';
-            const transactionsToShow = isFullHistory ? transactions : transactions.slice(-MAX_TRANSACTIONS_IN_VIEW);
+        function updateFilterButton() {
+            const filterBtn = document.getElementById('filterAllBtn');
+            if (currentFilter === 'all') {
+                filterBtn.innerHTML = '<i class="fas fa-list"></i> Show All';
+            } else {
+                filterBtn.innerHTML = '<i class="fas fa-list"></i> Show Filtered';
+            }
+        }
 
-            transactionsToShow.forEach((t, index) => {
-                const globalIndex = transactions.findIndex(tr => 
-                    tr.date === t.date && 
-                    tr.amount === t.amount && 
-                    tr.type === t.type
-                );
-                const balanceAtTransaction = graphData[globalIndex];
-                const badgeClass = `badge-${t.type}`;
-                
-                historyHtml += `<tr data-type="${t.type}">
-                    <td>${t.date}</td>
-                    <td><span class="type-badge ${badgeClass}">${t.type}</span></td>
-                    <td>${t.description || '-'}</td>
-                    <td class="${t.type === 'profit' || t.type === 'deposit' ? 'amount-positive' : 'amount-negative'}">
-                        ${t.type === 'profit' || t.type === 'deposit' ? '+' : '-'}$${t.amount.toFixed(2)}
-                    </td>
-                    <td>$${balanceAtTransaction ? balanceAtTransaction.toFixed(2) : '0.00'}</td>
-                    <td>
-                        <button class="btn-warning btn-sm" onclick="editTransaction(${globalIndex})" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn-danger btn-sm" onclick="deleteTransaction(${globalIndex})" title="Delete">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>`;
-            });
-
-            document.getElementById('historyTableBody').innerHTML = historyHtml;
+        function updateToggleHistoryViewButton() {
+            const btn = document.getElementById('toggleHistoryViewBtn');
+            if (isFullHistory) {
+                btn.innerHTML = '<i class="fas fa-chart-line"></i> Show Less';
+            } else {
+                btn.innerHTML = '<i class="fas fa-chart-line"></i> Show Full';
+            }
         }
 
         function updateStats() {
@@ -1249,45 +1364,12 @@
             document.getElementById('totalCapital').textContent = `$${totalCapital.toFixed(2)}`;
         }
 
-        function filterTransactions(type) {
-            let filteredTransactions = type === 'all' ? transactions : transactions.filter(t => t.type === type);
-            let historyHtml = '';
-            
-            filteredTransactions.forEach((t, index) => {
-                const globalIndex = transactions.findIndex(tr => 
-                    tr.date === t.date && 
-                    tr.amount === t.amount && 
-                    tr.type === t.type
-                );
-                const balanceAtTransaction = graphData[globalIndex];
-                const badgeClass = `badge-${t.type}`;
-                
-                historyHtml += `<tr data-type="${t.type}">
-                    <td>${t.date}</td>
-                    <td><span class="type-badge ${badgeClass}">${t.type}</span></td>
-                    <td>${t.description || '-'}</td>
-                    <td class="${t.type === 'profit' || t.type === 'deposit' ? 'amount-positive' : 'amount-negative'}">
-                        ${t.type === 'profit' || t.type === 'deposit' ? '+' : '-'}$${t.amount.toFixed(2)}
-                    </td>
-                    <td>$${balanceAtTransaction ? balanceAtTransaction.toFixed(2) : '0.00'}</td>
-                    <td>
-                        <button class="btn-warning btn-sm" onclick="editTransaction(${globalIndex})" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn-danger btn-sm" onclick="deleteTransaction(${globalIndex})" title="Delete">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>`;
-            });
-
-            document.getElementById('historyTableBody').innerHTML = historyHtml;
-        }
-
         function toggleFullHistory() {
             isFullHistory = !isFullHistory;
             saveState();
             updateChart();
+            updateHistoryTable();
+            updateToggleHistoryViewButton();
             showNotification(isFullHistory ? "Showing full history" : "Showing recent transactions", "info");
         }
 
@@ -1400,14 +1482,65 @@
             const transaction = transactions[index];
             if (!transaction) return;
 
+            currentlyEditingIndex = index;
             document.getElementById('dateSelection').value = transaction.date;
             document.getElementById('transactionType').value = transaction.type;
             document.getElementById('amountInput').value = transaction.amount;
             document.getElementById('descriptionInput').value = transaction.description || '';
 
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Edit';
+            submitBtn.onclick = saveEditedTransaction;
+
+            showNotification("Editing transaction #" + (index + 1), "info");
+            document.getElementById('amountInput').focus();
+        }
+
+        function saveEditedTransaction() {
+            const index = currentlyEditingIndex;
+            if (index === undefined || index < 0 || index >= transactions.length) {
+                showNotification("Error: Invalid transaction to edit", "error");
+                return;
+            }
+
+            let date = document.getElementById('dateSelection').value || new Date().toISOString().split('T')[0];
+            let type = document.getElementById('transactionType').value;
+            let amount = parseFloat(document.getElementById('amountInput').value);
+            let description = document.getElementById('descriptionInput').value || '';
+
+            if (!type || isNaN(amount) || amount <= 0) {
+                showNotification('Please enter a valid positive amount', 'error');
+                return;
+            }
+
+            // Calculate available balance for withdrawal (current balance + original transaction amount)
+            const originalAmount = transactions[index].amount;
+            const availableForWithdrawal = totalPL + (transactions[index].type === 'withdraw' ? originalAmount : 0);
+            
+            if (type === 'withdraw' && amount > availableForWithdrawal) {
+                showNotification('Insufficient balance for withdrawal!', 'error');
+                return;
+            }
+
             saveToUndoStack();
-            deleteTransaction(index, false);
-            showNotification("Transaction loaded for editing", "info");
+            
+            // First remove the old transaction's impact
+            processTransaction(transactions[index].type, -originalAmount);
+            
+            // Update the transaction
+            transactions[index] = { date, type, amount, description };
+            
+            // Add the new transaction's impact
+            processTransaction(type, amount);
+
+            // Recalculate all balances
+            recalculateAllBalances();
+
+            saveState();
+            updateUI();
+            resetForm();
+            
+            showNotification("Transaction #" + (index + 1) + " updated successfully", "success");
         }
 
         function deleteTransaction(index, showNote = true) {
@@ -1417,6 +1550,9 @@
             redoStack = [];
 
             const deletedTransaction = transactions.splice(index, 1)[0];
+            // Remove the transaction's impact
+            processTransaction(deletedTransaction.type, -deletedTransaction.amount);
+            
             recalculateAllBalances();
 
             saveState();
@@ -1448,11 +1584,11 @@
         }
 
         function exportCSV() {
-            let csv = 'Date,Type,Amount,Description,Balance\n';
+            let csv = 'SN,Date,Type,Amount,Description,Balance\n';
             
             transactions.forEach((t, index) => {
                 const balanceAtTransaction = graphData[index];
-                csv += `${t.date},${t.type},${t.amount},"${t.description || ''}",${balanceAtTransaction}\n`;
+                csv += `${index + 1},${t.date},${t.type},${t.amount},"${t.description || ''}",${balanceAtTransaction}\n`;
             });
             
             const blob = new Blob([csv], { type: 'text/csv' });
@@ -1490,41 +1626,5 @@
             initializeDashboard();
         }; 
     </script>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
-      
-       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-       const firebaseConfig = {
-  apiKey: "AIzaSyCkJJIETsEzwO3AK_4a0qu8RjYn_xA6XU4",
-  authDomain: "transactiondashboard-9cbb0.firebaseapp.com",
-  projectId: "transactiondashboard-9cbb0",
-  storageBucket: "transactiondashboard-9cbb0.firebasestorage.app",
-  messagingSenderId: "598024305893",
-  appId: "1:598024305893:web:2ff018aed2748008dea80c",
-  measurementId: "G-5N8DLJWYGN"
-};
-
-      
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-      
-        async function saveTestTransaction() {
-          try {
-            await addDoc(collection(db, "transactions"), {
-              type: "Deposit",
-              amount: 100,
-              note: "Test transaction",
-              date: new Date().toISOString()
-            });
-            console.log("✅ Test transaction saved to cloud!");
-          } catch (error) {
-            console.error("❌ Error saving transaction:", error);
-          }
-        }
-      
-        saveTestTransaction();
-      </script>
-      
 </body>
 </html>

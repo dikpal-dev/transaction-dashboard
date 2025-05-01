@@ -15,14 +15,14 @@
             --card-bg: #2a2a40;
             --input-bg: #3a3a50;
             --profit-color: #3cff00;
-            --loss-color: #ff0033;
+            --loss-color: #fd0033;
             --deposit-color: #f1c40f;
-            --withdraw-color: #0746f6;
+            --withdraw-color: #10a1ea;
             --warning-color: #FF9800;
             --danger-color: #ec2020;
             --success-color: #4CAF50;
-            --canvas-bg: #808080;
-            --calendar-color: #f1c40f;
+            --canvas-bg: #d9e8c8;
+            --calendar-color: #42f700;
         }
 
         * {
@@ -423,17 +423,17 @@
         }
 
         tr {
-            transition: background 0.2s ease;
+            transition:  0.2s ease;
         }
 
         tr:not(:first-child):hover {
             background: #3a3a50;
         }
 
-        tr[data-type="deposit"] { color: var(--deposit-color); }
-        tr[data-type="withdraw"] { color: var(--withdraw-color); }
-        tr[data-type="profit"] { color: var(--profit-color); }
-        tr[data-type="loss"] { color: var(--loss-color); }
+        tr[data-type="deposit"] { color:var(--deposit-color) }
+        tr[data-type="withdraw"] { color:var(--withdraw-color) }
+        tr[data-type="profit"] { color:var(--profit-color) }
+        tr[data-type="loss"] { color: var(--loss-color) }
 
         .type-badge {
             display: inline-block;
@@ -446,22 +446,22 @@
         }
 
         .badge-deposit {
-            background-color: rgba(241, 196, 15, 0.2);
+            background-color: rgba(18, 26, 9, 0.2);
             color: var(--deposit-color);
         }
 
         .badge-withdraw {
-            background-color: rgba(7, 70, 246, 0.2);
+            background-color: rgba(5, 8, 16, 0.2);
             color: var(--withdraw-color);
         }
 
         .badge-profit {
-            background-color: rgba(60, 255, 0, 0.2);
+            background-color: rgba(12, 20, 10, 0.2);
             color: var(--profit-color);
         }
 
         .badge-loss {
-            background-color: rgba(255, 0, 51, 0.2);
+            background-color: rgba(13, 5, 7, 0.2);
             color: var(--loss-color);
         }
 
@@ -944,7 +944,7 @@
         let redoStack = JSON.parse(localStorage.getItem('redoStack')) || [];
         let isFullHistory = localStorage.getItem('isFullHistory') === 'true';
         let currentFilter = localStorage.getItem('currentFilter') || 'all';
-        const MAX_TRANSACTIONS_IN_VIEW = 10;
+        const MAX_TRANSACTIONS_IN_VIEW = 15;
         let profitLossChart;
         let currentlyEditingIndex = -1;
 
@@ -1137,6 +1137,7 @@
                 
                 historyHtml += `<tr data-type="${t.type}">
                     <td>${sn}</td>
+                    
                     <td>${t.date}</td>
                     <td><span class="type-badge ${badgeClass}">${t.type}</span></td>
                     <td>${t.description || '-'}</td>

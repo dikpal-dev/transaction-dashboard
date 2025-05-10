@@ -67,6 +67,7 @@
             border: 2px solid var(--accent-color);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s ease;
+            cursor: pointer;
         }
 
         header h1 {
@@ -626,6 +627,119 @@
             display: block;
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 5% auto;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--accent-color);
+        }
+
+        /* Lock Screen Styles */
+        .lock-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .lock-screen h2 {
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .lock-screen input {
+            max-width: 300px;
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--text-color);
+            width: 80%;
+            text-align: center;
+        }
+
+        .lock-screen input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .lock-screen button {
+            max-width: 300px;
+            width: 80%;
+        }
+
+        .lock-screen .logo {
+            height: 80px;
+            width: 80px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .lock-screen .error-message {
+            color: var(--danger-color);
+            margin-top: 10px;
+            display: none;
+            font-weight: 500;
+        }
+
         /* Responsive adjustments */
         @media (min-width: 768px) {
             .container {
@@ -745,6 +859,20 @@
             .button-group button, .history-controls button {
                 flex-grow: 1;
             }
+            
+            .modal-content {
+                margin: 10% auto;
+                padding: 15px;
+            }
+            
+            .lock-screen h2 {
+                font-size: 20px;
+            }
+            
+            .lock-screen .logo {
+                height: 60px;
+                width: 60px;
+            }
         }
 
         /* Orientation-specific adjustments */
@@ -765,870 +893,1192 @@
     <link rel="shortcut icon" href="logo2.png" type="image/x-icon">
 </head>
 <body>
-    <header>
-        <div class="logo-container">
-            <img src="logo2.png" alt="Logo" id="logo">
-            <h1>Khukuri Steps</h1>
-        </div>
-        <h2 class="header-title">Transaction Tracker</h2>
-        <div class="header-controls">
-            <button class="btn-secondary theme-toggle-btn" onclick="toggleTheme()">
-                <i class="fas fa-moon"></i> Toggle Theme
-            </button>
-            <button class="btn-danger" id="deleteDataBtn">
-                <i class="fas fa-trash-alt"></i> Clear All
-            </button>
-        </div>
-    </header>
-
-    <div class="container">
-        <div class="chart-section fade-in">
-            <h3 class="section-title">Capital Flow</h3>
-            <div id="graph-container">
-                <canvas id="profitLossChart"></canvas>
-                <div class="spinner" id="chartSpinner"></div>
-                <button class="fullscreen-exit" onclick="exitFullscreen()">
-                    <i class="fas fa-times"></i> Exit Fullscreen
-                </button>
-            </div>
-            <div class="chart-legend">
-                <div class="chart-legend-item">
-                    <div class="chart-legend-color color-deposit"></div>
-                    <span>Deposit</span>
-                </div>
-                <div class="chart-legend-item">
-                    <div class="chart-legend-color color-withdraw"></div>
-                    <span>Withdraw</span>
-                </div>
-                <div class="chart-legend-item">
-                    <div class="chart-legend-color color-profit"></div>
-                    <span>Profit</span>
-                </div>
-                <div class="chart-legend-item">
-                    <div class="chart-legend-color color-loss"></div>
-                    <span>Loss</span>
-                </div>
-            </div>
-            <div class="button-group">
-                <button class="btn-primary" onclick="toggleFullscreen('graph-container')">
-                    <i class="fas fa-expand"></i> Fullscreen
-                </button>
-                <button class="btn-secondary" id="toggleHistoryViewBtn" onclick="toggleFullHistory()">
-                    <i class="fas fa-chart-line"></i> Show Full
-                </button>
-                <button id="toggleHistoryBtn" class="btn-warning" onclick="toggleHistorySection()">
-                    <i class="fas fa-eye-slash"></i> Hide History
-                </button>
-                <button class="btn-success" onclick="exportData()">
-                    <i class="fas fa-file-export"></i> Export Data
-                </button>
-            </div>
-        </div>
-
-        <div class="entry-section fade-in">
-            <h3 class="section-title">New Transaction</h3>
-            <div class="form-group">
-                <label for="dateSelection">Date:</label>
-                <div class="date-input-container">
-                    <input type="date" id="dateSelection">
-                    <i class="fas fa-calendar-alt calendar-icon"></i>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="transactionType">Transaction Type:</label>
-                <select id="transactionType">
-                    <option value="deposit">Deposit</option>
-                    <option value="withdraw">Withdraw</option>
-                    <option value="profit">Profit</option>
-                    <option value="loss">Loss</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="amountInput">Amount ($):</label>
-                <input type="number" id="amountInput" min="0" step="0.01" placeholder="Enter amount">
-            </div>
-            
-            <div class="form-group">
-                <label for="descriptionInput">Description (Optional):</label>
-                <input type="text" id="descriptionInput" placeholder="Enter description">
-            </div>
-
-            <button class="btn-primary" id="submitBtn" onclick="submitTransaction()">
-                <i class="fas fa-plus-circle"></i> Submit
-            </button>
-
-            <div class="stats-display">
-                <div class="stat-item time-elapsed">
-                    <span class="stat-label">Time Elapsed:</span>
-                    <span class="stat-value" id="timeElapsed">0 days</span>
-                </div>
-                <div class="stat-item total-pl">
-                    <span class="stat-label">Total Balance:</span>
-                    <span class="stat-value" id="totalPL">$0.00</span>
-                </div>
-                <div class="stat-item total-capital">
-                    <span class="stat-label">Pure P&L:</span>
-                    <span class="stat-value" id="totalCapital">$0.00</span>
-                </div>
-            </div>
-
-            <div class="button-group">
-                <button class="btn-warning" onclick="undoTransaction()">
-                    <i class="fas fa-undo"></i> Undo
-                </button>
-                <button class="btn-secondary" onclick="redoTransaction()">
-                    <i class="fas fa-redo"></i> Redo
-                </button>
-                <button class="btn-secondary" onclick="refreshPage()">
-                    <i class="fas fa-sync-alt"></i> Refresh
-                </button>
-            </div>
-        </div>
+    <!-- Lock Screen (shown when password is set) -->
+    <div class="lock-screen" id="lockScreen">
+        <img src="logo2.png" alt="Logo" class="logo" id="lockScreenLogo">
+        <h2>Enter Password to Unlock</h2>
+        <input type="password" id="unlockPassword" placeholder="Enter your password" class="form-control">
+        <button class="btn-primary" onclick="unlockDashboard()">
+            <i class="fas fa-unlock"></i> Unlock
+        </button>
+        <p class="error-message" id="unlockError">
+            Incorrect password. Please try again.
+        </p>
     </div>
 
-    <div class="history-section fade-in" id="historySection">
-        <h3 class="section-title">Transaction History</h3>
-        <div class="history-controls">
-            <button class="btn-secondary" id="filterAllBtn">
-                <i class="fas fa-list"></i> Show All
-            </button>
-            <button class="btn-secondary" onclick="filterTransactions('profit')">
-                <i class="fas fa-arrow-up"></i> Profits
-            </button>
-            <button class="btn-secondary" onclick="filterTransactions('loss')">
-                <i class="fas fa-arrow-down"></i> Losses
-            </button>
-            <button class="btn-secondary" onclick="filterTransactions('deposit')">
-                <i class="fas fa-money-bill-wave"></i> Deposits
-            </button>
-            <button class="btn-secondary" onclick="filterTransactions('withdraw')">
-                <i class="fas fa-hand-holding-usd"></i> Withdrawals
-            </button>
-            <button class="btn-success" onclick="exportCSV()">
-                <i class="fas fa-file-csv"></i> Export CSV
-            </button>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>SN</th>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                    <th>Balance</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="historyTableBody"></tbody>
-        </table>
-        <div class="spinner" id="tableSpinner"></div>
-    </div>
+    <!-- Main Dashboard (hidden when locked) -->
+    <div id="mainDashboard" style="display: none;">
+        <header>
+            <div class="logo-container">
+                <img src="logo2.png" alt="Logo" id="logo" onclick="openSettingsModal()">
+                <h1 id="usernameDisplay">Khukuri Steps</h1>
+            </div>
+            <h2 class="header-title">Transaction Tracker</h2>
+            <div class="header-controls">
+                <button class="btn-secondary theme-toggle-btn" onclick="toggleTheme()">
+                    <i class="fas fa-moon"></i> Toggle Theme
+                </button>
+                <button class="btn-secondary" onclick="openSettingsModal()">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+                <button class="btn-danger" id="deleteDataBtn">
+                    <i class="fas fa-trash-alt"></i> Clear All
+                </button>
+            </div>
+        </header>
 
-    <div class="notification" id="notification">
-        <i class="fas fa-check-circle"></i>
-        <span id="notification-message">Transaction submitted successfully!</span>
+        <div class="container">
+            <div class="chart-section fade-in">
+                <h3 class="section-title">Capital Flow</h3>
+                <div id="graph-container">
+                    <canvas id="profitLossChart"></canvas>
+                    <div class="spinner" id="chartSpinner"></div>
+                    <button class="fullscreen-exit" onclick="exitFullscreen()">
+                        <i class="fas fa-times"></i> Exit Fullscreen
+                    </button>
+                </div>
+                <div class="chart-legend">
+                    <div class="chart-legend-item">
+                        <div class="chart-legend-color color-deposit"></div>
+                        <span>Deposit</span>
+                    </div>
+                    <div class="chart-legend-item">
+                        <div class="chart-legend-color color-withdraw"></div>
+                        <span>Withdraw</span>
+                    </div>
+                    <div class="chart-legend-item">
+                        <div class="chart-legend-color color-profit"></div>
+                        <span>Profit</span>
+                    </div>
+                    <div class="chart-legend-item">
+                        <div class="chart-legend-color color-loss"></div>
+                        <span>Loss</span>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="toggleFullscreen('graph-container')">
+                        <i class="fas fa-expand"></i> Fullscreen
+                    </button>
+                    <button class="btn-secondary" id="toggleHistoryViewBtn" onclick="toggleFullHistory()">
+                        <i class="fas fa-chart-line"></i> Show Full
+                    </button>
+                    <button id="toggleHistoryBtn" class="btn-warning" onclick="toggleHistorySection()">
+                        <i class="fas fa-eye-slash"></i> Hide History
+                    </button>
+                    <button class="btn-success" onclick="exportData()">
+                        <i class="fas fa-file-export"></i> Export Data
+                    </button>
+                </div>
+            </div>
+
+            <div class="entry-section fade-in">
+                <h3 class="section-title">New Transaction</h3>
+                <div class="form-group">
+                    <label for="dateSelection">Date:</label>
+                    <div class="date-input-container">
+                        <input type="date" id="dateSelection">
+                        <i class="fas fa-calendar-alt calendar-icon"></i>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="transactionType">Transaction Type:</label>
+                    <select id="transactionType">
+                        <option value="deposit">Deposit</option>
+                        <option value="withdraw">Withdraw</option>
+                        <option value="profit">Profit</option>
+                        <option value="loss">Loss</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="amountInput">Amount ($):</label>
+                    <input type="number" id="amountInput" min="0" step="0.01" placeholder="Enter amount">
+                </div>
+                
+                <div class="form-group">
+                    <label for="descriptionInput">Description (Optional):</label>
+                    <input type="text" id="descriptionInput" placeholder="Enter description">
+                </div>
+
+                <button class="btn-primary" id="submitBtn" onclick="submitTransaction()">
+                    <i class="fas fa-plus-circle"></i> Submit
+                </button>
+
+                <div class="stats-display">
+                    <div class="stat-item time-elapsed">
+                        <span class="stat-label">Time Elapsed:</span>
+                        <span class="stat-value" id="timeElapsed">0 days</span>
+                    </div>
+                    <div class="stat-item total-pl">
+                        <span class="stat-label">Total Balance:</span>
+                        <span class="stat-value" id="totalPL">$0.00</span>
+                    </div>
+                    <div class="stat-item total-capital">
+                        <span class="stat-label">Pure P&L:</span>
+                        <span class="stat-value" id="totalCapital">$0.00</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-warning" onclick="undoTransaction()">
+                        <i class="fas fa-undo"></i> Undo
+                    </button>
+                    <button class="btn-secondary" onclick="redoTransaction()">
+                        <i class="fas fa-redo"></i> Redo
+                    </button>
+                    <button class="btn-secondary" onclick="refreshPage()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-section fade-in" id="historySection">
+            <h3 class="section-title">Transaction History</h3>
+            <div class="history-controls">
+                <button class="btn-secondary" id="filterAllBtn">
+                    <i class="fas fa-list"></i> Show All
+                </button>
+                <button class="btn-secondary" onclick="filterTransactions('profit')">
+                    <i class="fas fa-arrow-up"></i> Profits
+                </button>
+                <button class="btn-secondary" onclick="filterTransactions('loss')">
+                    <i class="fas fa-arrow-down"></i> Losses
+                </button>
+                <button class="btn-secondary" onclick="filterTransactions('deposit')">
+                    <i class="fas fa-money-bill-wave"></i> Deposits
+                </button>
+                <button class="btn-secondary" onclick="filterTransactions('withdraw')">
+                    <i class="fas fa-hand-holding-usd"></i> Withdrawals
+                </button>
+                <button class="btn-success" onclick="exportCSV()">
+                    <i class="fas fa-file-csv"></i> Export CSV
+                </button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>SN</th>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Balance</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTableBody"></tbody>
+            </table>
+            <div class="spinner" id="tableSpinner"></div>
+        </div>
+
+        <div class="notification" id="notification">
+            <i class="fas fa-check-circle"></i>
+            <span id="notification-message">Transaction submitted successfully!</span>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeSettingsModal">&times;</span>
+            <h3 class="section-title">Settings</h3>
+
+            <div class="form-group">
+                <label for="usernameInput">Username:</label>
+                <input type="text" id="usernameInput" placeholder="Enter your username">
+            </div>
+            
+            <div class="form-group">
+                <label for="logoUpload">Logo (URL or base64):</label>
+                <input type="text" id="logoUpload" placeholder="Enter image URL or paste base64">
+                <small>Or click the logo to upload</small>
+            </div>
+            
+            <div class="form-group">
+                <label>Preview:</label>
+                <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                    <img src="logo2.png" alt="Logo Preview" id="logoPreview" style="height: 60px; width: 60px; border-radius: 50%; border: 2px solid var(--accent-color); cursor: pointer;">
+                    <span id="usernamePreview">Khukuri Steps</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="passwordInput">Password Protection:</label>
+                <input type="password" id="passwordInput" placeholder="Set a password (leave blank to disable)" oninput="toggleConfirmPasswordField()">
+            </div>
+            <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+                <label for="confirmPasswordInput">Confirm Password:</label>
+                <input type="password" id="confirmPasswordInput" placeholder="Confirm your password">
+            </div>
+            
+            <div class="button-group" style="margin-top: 20px;">
+                <button class="btn-primary" onclick="saveSettings()">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <button class="btn-secondary" onclick="resetToDefault()">
+                    <i class="fas fa-undo"></i> Reset
+                </button>
+                <button class="btn-danger" onclick="closeSettingsModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-        let graphLabels = JSON.parse(localStorage.getItem('graphLabels')) || [];
-        let graphData = JSON.parse(localStorage.getItem('graphData')) || [];
-        let totalPL = localStorage.getItem('totalPL') ? parseFloat(localStorage.getItem('totalPL')) : 0;
-        let totalCapital = localStorage.getItem('totalCapital') ? parseFloat(localStorage.getItem('totalCapital')) : 0;
-        let firstTransactionDate = localStorage.getItem('firstTransactionDate');
-        let undoStack = JSON.parse(localStorage.getItem('undoStack')) || [];
-        let redoStack = JSON.parse(localStorage.getItem('redoStack')) || [];
-        let isFullHistory = localStorage.getItem('isFullHistory') === 'true';
-        let currentFilter = localStorage.getItem('currentFilter') || 'all';
-        const MAX_TRANSACTIONS_IN_VIEW = 15;
-        let profitLossChart;
-        let currentlyEditingIndex = -1;
-        
-        // Initialize Dashboard
-        function initializeDashboard() {
-            setupChart();
-            setupEventListeners();
-            recalculateAllBalances();
-            updateUI();
-            document.getElementById('dateSelection').valueAsDate = new Date();
-            updateToggleHistoryViewButton();
-            updateFilterButton();
-        }
-        
-        function setupChart() {
-            const ctx = document.getElementById('profitLossChart').getContext('2d');
-            
-            if (profitLossChart) {
-                profitLossChart.destroy();
-            }
-            
-            profitLossChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: isFullHistory ? graphLabels : graphLabels.slice(-MAX_TRANSACTIONS_IN_VIEW),
-                    datasets: [{
-                        label: 'Capital Flow',
-                        data: isFullHistory ? graphData : calculateRunningBalance(transactions.slice(-MAX_TRANSACTIONS_IN_VIEW)),
-                        borderWidth: 3,
-                        fill: false,
-                        tension: 0.1,
-                        segment: {
-                            borderColor: ctx => {
-                                const index = ctx.p0DataIndex;
-                                const showFull = isFullHistory || transactions.length <= MAX_TRANSACTIONS_IN_VIEW;
-                                const transactionIndex = showFull ? index : 
-                                    Math.max(0, transactions.length - MAX_TRANSACTIONS_IN_VIEW) + index;
-                                
-                                const transaction = transactions[transactionIndex];
-                                switch(transaction?.type) {
-                                    case 'deposit': return 'var(--deposit-color)';
-                                    case 'withdraw': return 'var(--withdraw-color)';
-                                    case 'profit': return 'var(--profit-color)';
-                                    case 'loss': return 'var(--loss-color)';
-                                    default: return 'var(--deposit-color)';
-                                }
-                            }
+// Transaction Dashboard - Complete JavaScript Code
+let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+let graphLabels = JSON.parse(localStorage.getItem('graphLabels')) || [];
+let graphData = JSON.parse(localStorage.getItem('graphData')) || [];
+let totalPL = localStorage.getItem('totalPL') ? parseFloat(localStorage.getItem('totalPL')) : 0;
+let totalCapital = localStorage.getItem('totalCapital') ? parseFloat(localStorage.getItem('totalCapital')) : 0;
+let firstTransactionDate = localStorage.getItem('firstTransactionDate');
+let undoStack = JSON.parse(localStorage.getItem('undoStack')) || [];
+let redoStack = JSON.parse(localStorage.getItem('redoStack')) || [];
+let isFullHistory = localStorage.getItem('isFullHistory') === 'true';
+let currentFilter = localStorage.getItem('currentFilter') || 'all';
+const MAX_TRANSACTIONS_IN_VIEW = 15;
+let profitLossChart;
+let currentlyEditingIndex = -1;
+let inactivityTimer;
+const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+// Initialize Dashboard
+function initializeDashboard() {
+    // Set random username if not already set
+    if (!localStorage.getItem('username')) {
+        const randomNumber = Math.floor(Math.random() * 10000);
+        localStorage.setItem('username', `@user${randomNumber}`);
+    }
+    
+    // Set logo if not already set
+    if (!localStorage.getItem('logo')) {
+        localStorage.setItem('logo', 'logo2.png');
+    }
+    
+    // Update UI with saved username and logo
+    document.getElementById('usernameDisplay').textContent = localStorage.getItem('username');
+    document.getElementById('logo').src = localStorage.getItem('logo');
+    document.getElementById('lockScreenLogo').src = localStorage.getItem('logo');
+    
+    setupChart();
+    setupEventListeners();
+    recalculateAllBalances();
+    updateUI();
+    document.getElementById('dateSelection').valueAsDate = new Date();
+    updateToggleHistoryViewButton();
+    updateFilterButton();
+    
+    // Start inactivity timer
+    resetInactivityTimer();
+}
+
+function checkPasswordProtection() {
+    const password = localStorage.getItem('dashboardPassword');
+    if (password) {
+        // Show lock screen only if password exists
+        document.getElementById('lockScreen').style.display = 'flex';
+        document.getElementById('mainDashboard').style.display = 'none';
+        document.getElementById('unlockPassword').focus();
+    } else {
+        // No password set, show dashboard
+        document.getElementById('lockScreen').style.display = 'none';
+        document.getElementById('mainDashboard').style.display = 'block';
+        initializeDashboard();
+    }
+}
+
+function unlockDashboard() {
+    const enteredPassword = document.getElementById('unlockPassword').value;
+    const storedPassword = localStorage.getItem('dashboardPassword');
+    
+    if (enteredPassword === storedPassword) {
+        document.getElementById('lockScreen').style.display = 'none';
+        document.getElementById('mainDashboard').style.display = 'block';
+        document.getElementById('unlockError').style.display = 'none';
+        document.getElementById('unlockPassword').value = '';
+        initializeDashboard();
+    } else {
+        document.getElementById('unlockError').style.display = 'block';
+        document.getElementById('unlockPassword').value = '';
+        document.getElementById('unlockPassword').focus();
+    }
+}
+
+function toggleConfirmPasswordField() {
+    const passwordInput = document.getElementById('passwordInput');
+    const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+    
+    if (passwordInput.value.length > 0) {
+        confirmPasswordGroup.style.display = 'block';
+    } else {
+        confirmPasswordGroup.style.display = 'none';
+        document.getElementById('confirmPasswordInput').value = '';
+    }
+}
+
+function setupChart() {
+    const ctx = document.getElementById('profitLossChart').getContext('2d');
+    
+    if (profitLossChart) {
+        profitLossChart.destroy();
+    }
+    
+    profitLossChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: isFullHistory ? graphLabels : graphLabels.slice(-MAX_TRANSACTIONS_IN_VIEW),
+            datasets: [{
+                label: 'Capital Flow',
+                data: isFullHistory ? graphData : calculateRunningBalance(transactions.slice(-MAX_TRANSACTIONS_IN_VIEW)),
+                borderWidth: 3,
+                fill: false,
+                tension: 0.1,
+                segment: {
+                    borderColor: ctx => {
+                        const index = ctx.p0DataIndex;
+                        const showFull = isFullHistory || transactions.length <= MAX_TRANSACTIONS_IN_VIEW;
+                        const transactionIndex = showFull ? index : 
+                            Math.max(0, transactions.length - MAX_TRANSACTIONS_IN_VIEW) + index;
+                        
+                        const transaction = transactions[transactionIndex];
+                        switch(transaction?.type) {
+                            case 'deposit': return 'var(--deposit-color)';
+                            case 'withdraw': return 'var(--withdraw-color)';
+                            case 'profit': return 'var(--profit-color)';
+                            case 'loss': return 'var(--loss-color)';
+                            default: return 'var(--deposit-color)';
                         }
-                    }]
+                    }
+                }
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+                duration: 1000,
+                easing: 'easeOutQuart'
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
+            plugins: {
+                legend: {
+                    display: false
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: {
-                        duration: 1000,
-                        easing: 'easeOutQuart'
-                    },
-                    interaction: {
-                        intersect: false,
-                        mode: 'index'
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            backgroundColor: '#ffffff',
-                            titleColor: '#333333',
-                            bodyColor: '#555555',
-                            borderColor: '#dddddd',
-                            borderWidth: 1,
-                            padding: 12,
-                            callbacks: {
-                                label: function(context) {
-                                    const transactionIndex = isFullHistory ? 
-                                        context.dataIndex : 
-                                        Math.max(0, transactions.length - MAX_TRANSACTIONS_IN_VIEW) + context.dataIndex;
-                                    
-                                    if (transactionIndex >= transactions.length) return ["Invalid transaction"];
-                                    
-                                    const transaction = transactions[transactionIndex];
-                                    return [
-                                        `Type: ${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}`,
-                                        `Amount: $${transaction.amount.toFixed(2)}`,
-                                        transaction.description ? `Note: ${transaction.description}` : '',
-                                        `Balance: $${context.parsed.y.toFixed(2)}`
-                                    ].filter(Boolean);
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.5)'
-                            },
-                            ticks: {
-                                color: 'var(--text-color)'
-                            }
-                        },
-                        y: {
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.5)'
-                            },
-                            ticks: {
-                                color: 'var(--text-color)',
-                                callback: function(value) {
-                                    return '$' + value;
-                                }
-                            }
+                tooltip: {
+                    backgroundColor: '#ffffff',
+                    titleColor: '#333333',
+                    bodyColor: '#555555',
+                    borderColor: '#dddddd',
+                    borderWidth: 1,
+                    padding: 12,
+                    callbacks: {
+                        label: function(context) {
+                            const transactionIndex = isFullHistory ? 
+                                context.dataIndex : 
+                                Math.max(0, transactions.length - MAX_TRANSACTIONS_IN_VIEW) + context.dataIndex;
+                            
+                            if (transactionIndex >= transactions.length) return ["Invalid transaction"];
+                            
+                            const transaction = transactions[transactionIndex];
+                            return [
+                                `Type: ${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}`,
+                                `Amount: $${transaction.amount.toFixed(2)}`,
+                                transaction.description ? `Note: ${transaction.description}` : '',
+                                `Balance: $${context.parsed.y.toFixed(2)}`
+                            ].filter(Boolean);
                         }
                     }
                 }
-            });
-        }
-        
-        function calculateRunningBalance(transactionsToShow) {
-            let runningBalance = 0;
-            
-            // Find starting balance before these transactions
-            const firstIndex = transactions.findIndex(t => 
-                t.date === transactionsToShow[0].date && 
-                t.amount === transactionsToShow[0].amount
-            );
-            
-            if (firstIndex > 0) {
-                runningBalance = graphData[firstIndex - 1];
-            }
-            
-            return transactionsToShow.map(t => {
-                switch(t.type) {
-                    case 'profit':
-                        runningBalance += t.amount;
-                        break;
-                    case 'loss':
-                        runningBalance -= t.amount;
-                        break;
-                    case 'deposit':
-                        runningBalance += t.amount;
-                        break;
-                    case 'withdraw':
-                        runningBalance -= t.amount;
-                        break;
-                }
-                return runningBalance;
-            });
-        }
-        
-        function recalculateAllBalances() {
-            let runningPL = 0;
-            let runningCapital = 0;
-            graphLabels = [];
-            graphData = [];
-            
-            transactions.forEach((t, index) => {
-                switch(t.type) {
-                    case 'profit':
-                        runningPL += t.amount;
-                        runningCapital += t.amount;
-                        break;
-                    case 'loss':
-                        runningPL -= t.amount;
-                        runningCapital -= t.amount;
-                        break;
-                    case 'deposit':
-                        runningPL += t.amount;
-                        break;
-                    case 'withdraw':
-                        runningPL -= t.amount;
-                        break;
-                }
-                graphLabels[index] = t.date;
-                graphData[index] = runningPL;
-            });
-            
-            totalPL = runningPL;
-            totalCapital = runningCapital;
-            saveState();
-        }
-        
-        function updateHistoryTable() {
-            let historyHtml = '';
-            let runningBalance = 0;
-            
-            const transactionsToShow = currentFilter === 'all' 
-                ? (isFullHistory ? transactions : transactions.slice(-MAX_TRANSACTIONS_IN_VIEW))
-                : transactions.filter(t => t.type === currentFilter);
-            
-            transactionsToShow.forEach((t, index) => {
-                // Calculate the balance after this transaction
-                switch(t.type) {
-                    case 'profit':
-                        runningBalance += t.amount;
-                        break;
-                    case 'loss':
-                        runningBalance -= t.amount;
-                        break;
-                    case 'deposit':
-                        runningBalance += t.amount;
-                        break;
-                    case 'withdraw':
-                        runningBalance -= t.amount;
-                        break;
-                }
-                
-                const badgeClass = `badge-${t.type}`;
-                const sn = index + 1;
-                
-                historyHtml += `<tr data-type="${t.type}">
-                    <td>${sn}</td>
-                    <td>${t.date}</td>
-                    <td><span class="type-badge ${badgeClass}">${t.type}</span></td>
-                    <td>${t.description || '-'}</td>
-                    <td class="${t.type === 'profit' || t.type === 'deposit' ? 'amount-positive' : 'amount-negative'}">
-                        ${t.type === 'profit' || t.type === 'deposit' ? '+' : '-'}$${t.amount.toFixed(2)}
-                    </td>
-                    <td>$${runningBalance.toFixed(2)}</td>
-                    <td>
-                        <button class="btn-warning btn-sm" onclick="editTransaction(${transactions.indexOf(t)})" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn-danger btn-sm" onclick="deleteTransaction(${transactions.indexOf(t)})" title="Delete">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>`;
-            });
-        
-            document.getElementById('historyTableBody').innerHTML = historyHtml;
-        }
-        
-        function filterTransactions(type) {
-            currentFilter = type;
-            updateFilterButton();
-            updateHistoryTable();
-        }
-        
-        function setupEventListeners() {
-            document.getElementById('deleteDataBtn').addEventListener('click', confirmDeleteAllData);
-            document.getElementById('amountInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    if (currentlyEditingIndex >= 0) {
-                        saveEditedTransaction();
-                    } else {
-                        submitTransaction();
+            },
+            scales: {
+                x: {
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.5)'
+                    },
+                    ticks: {
+                        color: 'var(--text-color)'
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.5)'
+                    },
+                    ticks: {
+                        color: 'var(--text-color)',
+                        callback: function(value) {
+                            return '$' + value;
+                        }
                     }
                 }
-            });
-            document.getElementById('filterAllBtn').addEventListener('click', function() {
-                filterTransactions('all');
-            });
-        }
-        
-        function saveState() {
-            localStorage.setItem('transactions', JSON.stringify(transactions));
-            localStorage.setItem('graphLabels', JSON.stringify(graphLabels));
-            localStorage.setItem('graphData', JSON.stringify(graphData));
-            localStorage.setItem('totalPL', totalPL);
-            localStorage.setItem('totalCapital', totalCapital);
-            localStorage.setItem('firstTransactionDate', firstTransactionDate || '');
-            localStorage.setItem('undoStack', JSON.stringify(undoStack));
-            localStorage.setItem('redoStack', JSON.stringify(redoStack));
-            localStorage.setItem('isFullHistory', isFullHistory);
-            localStorage.setItem('currentFilter', currentFilter);
-        }
-        
-        function submitTransaction() {
-            let date = document.getElementById('dateSelection').value || new Date().toISOString().split('T')[0];
-            let type = document.getElementById('transactionType').value;
-            let amount = parseFloat(document.getElementById('amountInput').value);
-            let description = document.getElementById('descriptionInput').value || '';
-        
-            if (!type || isNaN(amount) || amount <= 0) {
-                showNotification('Please enter a valid positive amount', 'error');
-                return;
-            }
-        
-            if (type === 'withdraw' && amount > totalPL) {
-                showNotification('Insufficient balance for withdrawal!', 'error');
-                return;
-            }
-        
-            saveToUndoStack();
-            redoStack = [];
-            processTransaction(type, amount);
-        
-            if (!firstTransactionDate) {
-                firstTransactionDate = date;
-            }
-        
-            transactions.push({ date, type, amount, description });
-            graphLabels.push(date);
-            graphData.push(totalPL);
-        
-            saveState();
-            updateUI();
-            showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} of $${amount.toFixed(2)} recorded!`);
-            resetForm();
-        }
-        
-        function saveToUndoStack() {
-            undoStack.push({
-                transactions: [...transactions],
-                graphLabels: [...graphLabels],
-                graphData: [...graphData],
-                totalPL: totalPL,
-                totalCapital: totalCapital,
-                firstTransactionDate: firstTransactionDate
-            });
-        }
-        
-        function processTransaction(type, amount) {
-            switch(type) {
-                case 'profit':
-                    totalPL += amount;
-                    totalCapital += amount;
-                    break;
-                case 'loss':
-                    totalPL -= amount;
-                    totalCapital -= amount;
-                    break;
-                case 'deposit':
-                    totalPL += amount;
-                    break;
-                case 'withdraw':
-                    totalPL -= amount;
-                    break;
             }
         }
-        
-        function resetForm() {
-            document.getElementById('amountInput').value = '';
-            document.getElementById('descriptionInput').value = '';
-            document.getElementById('dateSelection').valueAsDate = new Date();
-            currentlyEditingIndex = -1;
-            
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Submit';
-            submitBtn.onclick = submitTransaction;
-            
-            document.getElementById('amountInput').focus();
+    });
+}
+
+function calculateRunningBalance(transactionsToShow) {
+    let runningBalance = 0;
+    
+    // Find starting balance before these transactions
+    const firstIndex = transactions.findIndex(t => 
+        t.date === transactionsToShow[0].date && 
+        t.amount === transactionsToShow[0].amount
+    );
+    
+    if (firstIndex > 0) {
+        runningBalance = graphData[firstIndex - 1];
+    }
+    
+    return transactionsToShow.map(t => {
+        switch(t.type) {
+            case 'profit':
+                runningBalance += t.amount;
+                break;
+            case 'loss':
+                runningBalance -= t.amount;
+                break;
+            case 'deposit':
+                runningBalance += t.amount;
+                break;
+            case 'withdraw':
+                runningBalance -= t.amount;
+                break;
+        }
+        return runningBalance;
+    });
+}
+
+function recalculateAllBalances() {
+    let runningPL = 0;
+    let runningCapital = 0;
+    graphLabels = [];
+    graphData = [];
+    
+    transactions.forEach((t, index) => {
+        switch(t.type) {
+            case 'profit':
+                runningPL += t.amount;
+                runningCapital += t.amount;
+                break;
+            case 'loss':
+                runningPL -= t.amount;
+                runningCapital -= t.amount;
+                break;
+            case 'deposit':
+                runningPL += t.amount;
+                break;
+            case 'withdraw':
+                runningPL -= t.amount;
+                break;
+        }
+        graphLabels[index] = t.date;
+        graphData[index] = runningPL;
+    });
+    
+    totalPL = runningPL;
+    totalCapital = runningCapital;
+    saveState();
+}
+
+function updateHistoryTable() {
+    let historyHtml = '';
+    let runningBalance = 0;
+    
+    const transactionsToShow = currentFilter === 'all' 
+        ? (isFullHistory ? transactions : transactions.slice(-MAX_TRANSACTIONS_IN_VIEW))
+        : transactions.filter(t => t.type === currentFilter);
+    
+    transactionsToShow.forEach((t, index) => {
+        // Calculate the balance after this transaction
+        switch(t.type) {
+            case 'profit':
+                runningBalance += t.amount;
+                break;
+            case 'loss':
+                runningBalance -= t.amount;
+                break;
+            case 'deposit':
+                runningBalance += t.amount;
+                break;
+            case 'withdraw':
+                runningBalance -= t.amount;
+                break;
         }
         
-        function updateUI() {
-            updateChart();
-            updateHistoryTable();
-            updateStats();
-            updateToggleHistoryViewButton();
-            updateFilterButton();
-        }
+        const badgeClass = `badge-${t.type}`;
+        const sn = index + 1;
         
-        function updateChart() {
-            const showFullHistory = isFullHistory || transactions.length <= MAX_TRANSACTIONS_IN_VIEW;
-            const labelsToShow = showFullHistory ? graphLabels : graphLabels.slice(-MAX_TRANSACTIONS_IN_VIEW);
-            const dataToShow = showFullHistory ? graphData : calculateRunningBalance(transactions.slice(-MAX_TRANSACTIONS_IN_VIEW));
-        
-            profitLossChart.data.labels = labelsToShow;
-            profitLossChart.data.datasets[0].data = dataToShow;
-            profitLossChart.update();
-        }
-        
-        function updateFilterButton() {
-            const filterBtn = document.getElementById('filterAllBtn');
-            if (currentFilter === 'all') {
-                filterBtn.innerHTML = '<i class="fas fa-list"></i> Show All';
+        historyHtml += `<tr data-type="${t.type}">
+            <td>${sn}</td>
+            <td>${t.date}</td>
+            <td><span class="type-badge ${badgeClass}">${t.type}</span></td>
+            <td>${t.description || '-'}</td>
+            <td class="${t.type === 'profit' || t.type === 'deposit' ? 'amount-positive' : 'amount-negative'}">
+                ${t.type === 'profit' || t.type === 'deposit' ? '+' : '-'}$${t.amount.toFixed(2)}
+            </td>
+            <td>$${runningBalance.toFixed(2)}</td>
+            <td>
+                <button class="btn-warning btn-sm" onclick="editTransaction(${transactions.indexOf(t)})" title="Edit">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn-danger btn-sm" onclick="deleteTransaction(${transactions.indexOf(t)})" title="Delete">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>`;
+    });
+
+    document.getElementById('historyTableBody').innerHTML = historyHtml;
+}
+
+function filterTransactions(type) {
+    currentFilter = type;
+    updateFilterButton();
+    updateHistoryTable();
+}
+
+function setupEventListeners() {
+    document.getElementById('deleteDataBtn').addEventListener('click', confirmDeleteAllData);
+    document.getElementById('amountInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            if (currentlyEditingIndex >= 0) {
+                saveEditedTransaction();
             } else {
-                filterBtn.innerHTML = '<i class="fas fa-list"></i> Show Filtered';
+                submitTransaction();
             }
         }
-        
-        function updateToggleHistoryViewButton() {
-            const btn = document.getElementById('toggleHistoryViewBtn');
-            if (isFullHistory) {
-                btn.innerHTML = '<i class="fas fa-chart-line"></i> Show Less';
-            } else {
-                btn.innerHTML = '<i class="fas fa-chart-line"></i> Show Full';
+    });
+    document.getElementById('filterAllBtn').addEventListener('click', function() {
+        filterTransactions('all');
+    });
+    
+    // Logo upload functionality
+    document.getElementById('logoPreview').addEventListener('click', function() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('logoPreview').src = event.target.result;
+                    document.getElementById('logoUpload').value = event.target.result;
+                };
+                reader.readAsDataURL(file);
             }
-        }
-        
-        function updateStats() {
-            updateTimeElapsed();
-            updateTotalPL();
-            updateTotalCapital();
-        }
-        
-        function updateTimeElapsed() {
-            if (!firstTransactionDate) {
-                document.getElementById('timeElapsed').textContent = 'No transactions yet';
-                return;
-            }
-        
-            const firstDate = new Date(firstTransactionDate);
-            const today = new Date();
-            const diffTime = today - firstDate;
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-        
-            document.getElementById('timeElapsed').textContent = `${diffDays} days`;
-        }
-        
-        function updateTotalPL() {
-            document.getElementById('totalPL').textContent = `$${totalPL.toFixed(2)}`;
-        }
-        
-        function updateTotalCapital() {
-            document.getElementById('totalCapital').textContent = `$${totalCapital.toFixed(2)}`;
-        }
-        
-        function toggleFullHistory() {
-            isFullHistory = !isFullHistory;
-            saveState();
-            updateChart();
-            updateHistoryTable();
-            updateToggleHistoryViewButton();
-            showNotification(isFullHistory ? "Showing full history" : "Showing recent transactions", "info");
-        }
-        
-        function toggleHistorySection() {
-            const historySection = document.getElementById('historySection');
-            const toggleBtn = document.getElementById('toggleHistoryBtn');
-            
-            if (historySection.style.display === 'none') {
-                historySection.style.display = 'block';
-                toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Hide History';
-            } else {
-                historySection.style.display = 'none';
-                toggleBtn.innerHTML = '<i class="fas fa-eye"></i> Show History';
-            }
-        }
-        
-        function toggleFullscreen(elementId) {
-            const element = document.getElementById(elementId);
-            if (!document.fullscreenElement) {
-                element.requestFullscreen?.() || 
-                element.mozRequestFullScreen?.() || 
-                element.webkitRequestFullscreen?.() || 
-                element.msRequestFullscreen?.();
-            } else {
-                document.exitFullscreen?.() || 
-                document.mozCancelFullScreen?.() || 
-                document.webkitExitFullscreen?.() || 
-                document.msExitFullscreen?.();
-            }
-        }
-        
-        function exitFullscreen() {
-            if (document.fullscreenElement) {
-                document.exitFullscreen();
-            }
-        }
-        
-        function undoTransaction() {
-            if (undoStack.length > 0) {
-                redoStack.push({
-                    transactions: [...transactions],
-                    graphLabels: [...graphLabels],
-                    graphData: [...graphData],
-                    totalPL: totalPL,
-                    totalCapital: totalCapital,
-                    firstTransactionDate: firstTransactionDate
-                });
-        
-                const previousState = undoStack.pop();
-                transactions = previousState.transactions;
-                graphLabels = previousState.graphLabels;
-                graphData = previousState.graphData;
-                totalPL = previousState.totalPL;
-                totalCapital = previousState.totalCapital;
-                firstTransactionDate = previousState.firstTransactionDate;
-        
-                saveState();
-                updateUI();
-                showNotification("Undo successful", "success");
-            } else {
-                showNotification("Nothing to undo!", "warning");
-            }
-        }
-        
-        function redoTransaction() {
-            if (redoStack.length > 0) {
-                undoStack.push({
-                    transactions: [...transactions],
-                    graphLabels: [...graphLabels],
-                    graphData: [...graphData],
-                    totalPL: totalPL,
-                    totalCapital: totalCapital,
-                    firstTransactionDate: firstTransactionDate
-                });
-        
-                const nextState = redoStack.pop();
-                transactions = nextState.transactions;
-                graphLabels = nextState.graphLabels;
-                graphData = nextState.graphData;
-                totalPL = nextState.totalPL;
-                totalCapital = nextState.totalCapital;
-                firstTransactionDate = nextState.firstTransactionDate;
-        
-                saveState();
-                updateUI();
-                showNotification("Redo successful", "success");
-            } else {
-                showNotification("Nothing to redo!", "warning");
-            }
-        }
-        
-        function confirmDeleteAllData() {
-            if (confirm("Are you sure you want to delete ALL data? This cannot be undone!")) {
-                localStorage.clear();
-                location.reload();
-            }
-        }
-        
-        function refreshPage() {
-            location.reload();
-        }
-        
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light-mode' : '');
-            showNotification(`Theme set to ${document.body.classList.contains('light-mode') ? 'light' : 'dark'} mode`, "info");
-        }
-        
-        function editTransaction(index) {
-            const transaction = transactions[index];
-            if (!transaction) return;
-        
-            currentlyEditingIndex = index;
-            document.getElementById('dateSelection').value = transaction.date;
-            document.getElementById('transactionType').value = transaction.type;
-            document.getElementById('amountInput').value = transaction.amount;
-            document.getElementById('descriptionInput').value = transaction.description || '';
-        
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Edit';
-            submitBtn.onclick = saveEditedTransaction;
-        
-            showNotification("Editing transaction #" + (index + 1), "info");
-            document.getElementById('amountInput').focus();
-        }
-        
-        function saveEditedTransaction() {
-            const index = currentlyEditingIndex;
-            if (index === undefined || index < 0 || index >= transactions.length) {
-                showNotification("Error: Invalid transaction to edit", "error");
-                return;
-            }
-        
-            let date = document.getElementById('dateSelection').value || new Date().toISOString().split('T')[0];
-            let type = document.getElementById('transactionType').value;
-            let amount = parseFloat(document.getElementById('amountInput').value);
-            let description = document.getElementById('descriptionInput').value || '';
-        
-            if (!type || isNaN(amount) || amount <= 0) {
-                showNotification('Please enter a valid positive amount', 'error');
-                return;
-            }
-        
-            // Calculate available balance for withdrawal (current balance + original transaction amount)
-            const originalAmount = transactions[index].amount;
-            const availableForWithdrawal = totalPL + (transactions[index].type === 'withdraw' ? originalAmount : 0);
-            
-            if (type === 'withdraw' && amount > availableForWithdrawal) {
-                showNotification('Insufficient balance for withdrawal!', 'error');
-                return;
-            }
-        
-            saveToUndoStack();
-            
-            // First remove the old transaction's impact
-            processTransaction(transactions[index].type, -originalAmount);
-            
-            // Update the transaction
-            transactions[index] = { date, type, amount, description };
-            
-            // Add the new transaction's impact
-            processTransaction(type, amount);
-        
-            // Recalculate all balances
-            recalculateAllBalances();
-        
-            saveState();
-            updateUI();
-            resetForm();
-            
-            showNotification("Transaction #" + (index + 1) + " updated successfully", "success");
-        }
-        
-        function deleteTransaction(index, showNote = true) {
-            if (index < 0 || index >= transactions.length) return;
-        
-            saveToUndoStack();
-            redoStack = [];
-        
-            const deletedTransaction = transactions.splice(index, 1)[0];
-            // Remove the transaction's impact
-            processTransaction(deletedTransaction.type, -deletedTransaction.amount);
-            
-            recalculateAllBalances();
-        
-            saveState();
-            updateUI();
-            if (showNote) showNotification("Transaction deleted", "success");
-        }
-        
-        function exportData() {
-            const data = {
-                transactions: transactions,
-                stats: {
-                    totalPL: totalPL,
-                    totalCapital: totalCapital,
-                    firstTransactionDate: firstTransactionDate
-                }
-            };
-            
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `transaction-data-${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            showNotification("Data exported successfully", "success");
-        }
-        
-        function exportCSV() {
-            let csv = 'SN,Date,Type,Amount,Description,Balance\n';
-            let runningBalance = 0;
-            
-            transactions.forEach((t, index) => {
-                // Calculate the balance after this transaction
-                switch(t.type) {
-                    case 'profit':
-                        runningBalance += t.amount;
-                        break;
-                    case 'loss':
-                        runningBalance -= t.amount;
-                        break;
-                    case 'deposit':
-                        runningBalance += t.amount;
-                        break;
-                    case 'withdraw':
-                        runningBalance -= t.amount;
-                        break;
-                }
-                
-                csv += `${index + 1},${t.date},${t.type},${t.amount},"${t.description || ''}",${runningBalance.toFixed(2)}\n`;
-            });
-            
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `transactions-${new Date().toISOString().split('T')[0]}.csv`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            showNotification("CSV exported successfully", "success");
-        }
-        
-        function showNotification(message, type = 'success') {
-            const notification = document.getElementById('notification');
-            const notificationMessage = document.getElementById('notification-message');
-            
-            notification.className = `notification ${type}`;
-            notificationMessage.textContent = message;
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-        
-        // Initialize on load
-        window.onload = function() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                document.body.classList.add(savedTheme);
-            }
-            initializeDashboard();
         };
-    </script>
+        input.click();
+    });
+    
+    // Logo URL change handler
+    document.getElementById('logoUpload').addEventListener('input', function() {
+        const value = this.value.trim();
+        if (value) {
+            document.getElementById('logoPreview').src = value;
+        }
+    });
+    
+    // Username change handler
+    document.getElementById('usernameInput').addEventListener('input', function() {
+        document.getElementById('usernamePreview').textContent = this.value || 'Khukuri Steps';
+    });
+    
+    // Password enter key handler
+    document.getElementById('unlockPassword').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            unlockDashboard();
+        }
+    });
+    
+    // Track user activity to reset inactivity timer
+    document.addEventListener('mousemove', resetInactivityTimer);
+    document.addEventListener('keypress', resetInactivityTimer);
+    document.addEventListener('click', resetInactivityTimer);
+    document.addEventListener('scroll', resetInactivityTimer);
+}
+
+function resetInactivityTimer() {
+    // Clear existing timer
+    clearTimeout(inactivityTimer);
+    
+    // Only set timer if password protection is enabled
+    if (localStorage.getItem('dashboardPassword')) {
+        inactivityTimer = setTimeout(lockDashboard, INACTIVITY_TIMEOUT);
+    }
+}
+
+function lockDashboard() {
+    if (document.getElementById('mainDashboard').style.display !== 'none') {
+        document.getElementById('lockScreen').style.display = 'flex';
+        document.getElementById('mainDashboard').style.display = 'none';
+        document.getElementById('unlockPassword').focus();
+        showNotification("Dashboard locked due to inactivity", "info");
+    }
+}
+
+function saveState() {
+    localStorage.setItem('transactions', JSON.stringify(transactions));
+    localStorage.setItem('graphLabels', JSON.stringify(graphLabels));
+    localStorage.setItem('graphData', JSON.stringify(graphData));
+    localStorage.setItem('totalPL', totalPL);
+    localStorage.setItem('totalCapital', totalCapital);
+    localStorage.setItem('firstTransactionDate', firstTransactionDate || '');
+    localStorage.setItem('undoStack', JSON.stringify(undoStack));
+    localStorage.setItem('redoStack', JSON.stringify(redoStack));
+    localStorage.setItem('isFullHistory', isFullHistory);
+    localStorage.setItem('currentFilter', currentFilter);
+}
+
+function submitTransaction() {
+    let date = document.getElementById('dateSelection').value || new Date().toISOString().split('T')[0];
+    let type = document.getElementById('transactionType').value;
+    let amount = parseFloat(document.getElementById('amountInput').value);
+    let description = document.getElementById('descriptionInput').value || '';
+
+    if (!type || isNaN(amount) || amount <= 0) {
+        showNotification('Please enter a valid positive amount', 'error');
+        return;
+    }
+
+    if (type === 'withdraw' && amount > totalPL) {
+        showNotification('Insufficient balance for withdrawal!', 'error');
+        return;
+    }
+
+    saveToUndoStack();
+    redoStack = [];
+    processTransaction(type, amount);
+
+    if (!firstTransactionDate) {
+        firstTransactionDate = date;
+    }
+
+    transactions.push({ date, type, amount, description });
+    graphLabels.push(date);
+    graphData.push(totalPL);
+
+    saveState();
+    updateUI();
+    showNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} of $${amount.toFixed(2)} recorded!`);
+    resetForm();
+}
+
+function saveToUndoStack() {
+    undoStack.push({
+        transactions: [...transactions],
+        graphLabels: [...graphLabels],
+        graphData: [...graphData],
+        totalPL: totalPL,
+        totalCapital: totalCapital,
+        firstTransactionDate: firstTransactionDate
+    });
+}
+
+function processTransaction(type, amount) {
+    switch(type) {
+        case 'profit':
+            totalPL += amount;
+            totalCapital += amount;
+            break;
+        case 'loss':
+            totalPL -= amount;
+            totalCapital -= amount;
+            break;
+        case 'deposit':
+            totalPL += amount;
+            break;
+        case 'withdraw':
+            totalPL -= amount;
+            break;
+    }
+}
+
+function resetForm() {
+    document.getElementById('amountInput').value = '';
+    document.getElementById('descriptionInput').value = '';
+    document.getElementById('dateSelection').valueAsDate = new Date();
+    currentlyEditingIndex = -1;
+    
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Submit';
+    submitBtn.onclick = submitTransaction;
+    
+    document.getElementById('amountInput').focus();
+}
+
+function updateUI() {
+    updateChart();
+    updateHistoryTable();
+    updateStats();
+    updateToggleHistoryViewButton();
+    updateFilterButton();
+}
+
+function updateChart() {
+    const showFullHistory = isFullHistory || transactions.length <= MAX_TRANSACTIONS_IN_VIEW;
+    const labelsToShow = showFullHistory ? graphLabels : graphLabels.slice(-MAX_TRANSACTIONS_IN_VIEW);
+    const dataToShow = showFullHistory ? graphData : calculateRunningBalance(transactions.slice(-MAX_TRANSACTIONS_IN_VIEW));
+
+    profitLossChart.data.labels = labelsToShow;
+    profitLossChart.data.datasets[0].data = dataToShow;
+    profitLossChart.update();
+}
+
+function updateFilterButton() {
+    const filterBtn = document.getElementById('filterAllBtn');
+    if (currentFilter === 'all') {
+        filterBtn.innerHTML = '<i class="fas fa-list"></i> Show All';
+    } else {
+        filterBtn.innerHTML = '<i class="fas fa-list"></i> Show Filtered';
+    }
+}
+
+function updateToggleHistoryViewButton() {
+    const btn = document.getElementById('toggleHistoryViewBtn');
+    if (isFullHistory) {
+        btn.innerHTML = '<i class="fas fa-chart-line"></i> Show Less';
+    } else {
+        btn.innerHTML = '<i class="fas fa-chart-line"></i> Show Full';
+    }
+}
+
+function updateStats() {
+    updateTimeElapsed();
+    updateTotalPL();
+    updateTotalCapital();
+}
+
+function updateTimeElapsed() {
+    if (!firstTransactionDate) {
+        document.getElementById('timeElapsed').textContent = 'No transactions yet';
+        return;
+    }
+
+    const firstDate = new Date(firstTransactionDate);
+    const today = new Date();
+    const diffTime = today - firstDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    document.getElementById('timeElapsed').textContent = `${diffDays} days`;
+}
+
+function updateTotalPL() {
+    document.getElementById('totalPL').textContent = `$${totalPL.toFixed(2)}`;
+}
+
+function updateTotalCapital() {
+    document.getElementById('totalCapital').textContent = `$${totalCapital.toFixed(2)}`;
+}
+
+function toggleFullHistory() {
+    isFullHistory = !isFullHistory;
+    saveState();
+    updateChart();
+    updateHistoryTable();
+    updateToggleHistoryViewButton();
+    showNotification(isFullHistory ? "Showing full history" : "Showing recent transactions", "info");
+}
+
+function toggleHistorySection() {
+    const historySection = document.getElementById('historySection');
+    const toggleBtn = document.getElementById('toggleHistoryBtn');
+    
+    if (historySection.style.display === 'none') {
+        historySection.style.display = 'block';
+        toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Hide History';
+    } else {
+        historySection.style.display = 'none';
+        toggleBtn.innerHTML = '<i class="fas fa-eye"></i> Show History';
+    }
+}
+
+function toggleFullscreen(elementId) {
+    const element = document.getElementById(elementId);
+    if (!document.fullscreenElement) {
+        element.requestFullscreen?.() || 
+        element.mozRequestFullScreen?.() || 
+        element.webkitRequestFullscreen?.() || 
+        element.msRequestFullscreen?.();
+    } else {
+        document.exitFullscreen?.() || 
+        document.mozCancelFullScreen?.() || 
+        document.webkitExitFullscreen?.() || 
+        document.msExitFullscreen?.();
+    }
+}
+
+function exitFullscreen() {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    }
+}
+
+function undoTransaction() {
+    if (undoStack.length > 0) {
+        redoStack.push({
+            transactions: [...transactions],
+            graphLabels: [...graphLabels],
+            graphData: [...graphData],
+            totalPL: totalPL,
+            totalCapital: totalCapital,
+            firstTransactionDate: firstTransactionDate
+        });
+
+        const previousState = undoStack.pop();
+        transactions = previousState.transactions;
+        graphLabels = previousState.graphLabels;
+        graphData = previousState.graphData;
+        totalPL = previousState.totalPL;
+        totalCapital = previousState.totalCapital;
+        firstTransactionDate = previousState.firstTransactionDate;
+
+        saveState();
+        updateUI();
+        showNotification("Undo successful", "success");
+    } else {
+        showNotification("Nothing to undo!", "warning");
+    }
+}
+
+function redoTransaction() {
+    if (redoStack.length > 0) {
+        undoStack.push({
+            transactions: [...transactions],
+            graphLabels: [...graphLabels],
+            graphData: [...graphData],
+            totalPL: totalPL,
+            totalCapital: totalCapital,
+            firstTransactionDate: firstTransactionDate
+        });
+
+        const nextState = redoStack.pop();
+        transactions = nextState.transactions;
+        graphLabels = nextState.graphLabels;
+        graphData = nextState.graphData;
+        totalPL = nextState.totalPL;
+        totalCapital = nextState.totalCapital;
+        firstTransactionDate = nextState.firstTransactionDate;
+
+        saveState();
+        updateUI();
+        showNotification("Redo successful", "success");
+    } else {
+        showNotification("Nothing to redo!", "warning");
+    }
+}
+
+function confirmDeleteAllData() {
+    if (confirm("Are you sure you want to delete ALL data? This cannot be undone!")) {
+        localStorage.clear();
+        location.reload();
+    }
+}
+
+function refreshPage() {
+    location.reload();
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('light-mode');
+    localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light-mode' : '');
+    showNotification(`Theme set to ${document.body.classList.contains('light-mode') ? 'light' : 'dark'} mode`, "info");
+}
+
+function editTransaction(index) {
+    const transaction = transactions[index];
+    if (!transaction) return;
+
+    currentlyEditingIndex = index;
+    document.getElementById('dateSelection').value = transaction.date;
+    document.getElementById('transactionType').value = transaction.type;
+    document.getElementById('amountInput').value = transaction.amount;
+    document.getElementById('descriptionInput').value = transaction.description || '';
+
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Edit';
+    submitBtn.onclick = saveEditedTransaction;
+
+    showNotification("Editing transaction #" + (index + 1), "info");
+    document.getElementById('amountInput').focus();
+}
+
+function saveEditedTransaction() {
+    const index = currentlyEditingIndex;
+    if (index === undefined || index < 0 || index >= transactions.length) {
+        showNotification("Error: Invalid transaction to edit", "error");
+        return;
+    }
+
+    let date = document.getElementById('dateSelection').value || new Date().toISOString().split('T')[0];
+    let type = document.getElementById('transactionType').value;
+    let amount = parseFloat(document.getElementById('amountInput').value);
+    let description = document.getElementById('descriptionInput').value || '';
+
+    if (!type || isNaN(amount) || amount <= 0) {
+        showNotification('Please enter a valid positive amount', 'error');
+        return;
+    }
+
+    // Calculate available balance for withdrawal (current balance + original transaction amount)
+    const originalAmount = transactions[index].amount;
+    const availableForWithdrawal = totalPL + (transactions[index].type === 'withdraw' ? originalAmount : 0);
+    
+    if (type === 'withdraw' && amount > availableForWithdrawal) {
+        showNotification('Insufficient balance for withdrawal!', 'error');
+        return;
+    }
+
+    saveToUndoStack();
+    
+    // First remove the old transaction's impact
+    processTransaction(transactions[index].type, -originalAmount);
+    
+    // Update the transaction
+    transactions[index] = { date, type, amount, description };
+    
+    // Add the new transaction's impact
+    processTransaction(type, amount);
+
+    // Recalculate all balances
+    recalculateAllBalances();
+
+    saveState();
+    updateUI();
+    resetForm();
+    
+    showNotification("Transaction #" + (index + 1) + " updated successfully", "success");
+}
+
+function deleteTransaction(index, showNote = true) {
+    if (index < 0 || index >= transactions.length) return;
+
+    saveToUndoStack();
+    redoStack = [];
+
+    const deletedTransaction = transactions.splice(index, 1)[0];
+    // Remove the transaction's impact
+    processTransaction(deletedTransaction.type, -deletedTransaction.amount);
+    
+    recalculateAllBalances();
+
+    saveState();
+    updateUI();
+    if (showNote) showNotification("Transaction deleted", "success");
+}
+
+function exportData() {
+    const data = {
+        transactions: transactions,
+        stats: {
+            totalPL: totalPL,
+            totalCapital: totalCapital,
+            firstTransactionDate: firstTransactionDate
+        }
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `transaction-data-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showNotification("Data exported successfully", "success");
+}
+
+function exportCSV() {
+    let csv = 'SN,Date,Type,Amount,Description,Balance\n';
+    let runningBalance = 0;
+    
+    transactions.forEach((t, index) => {
+        // Calculate the balance after this transaction
+        switch(t.type) {
+            case 'profit':
+                runningBalance += t.amount;
+                break;
+            case 'loss':
+                runningBalance -= t.amount;
+                break;
+            case 'deposit':
+                runningBalance += t.amount;
+                break;
+            case 'withdraw':
+                runningBalance -= t.amount;
+                break;
+        }
+        
+        csv += `${index + 1},${t.date},${t.type},${t.amount},"${t.description || ''}",${runningBalance.toFixed(2)}\n`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `transactions-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showNotification("CSV exported successfully", "success");
+}
+
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    const notificationMessage = document.getElementById('notification-message');
+    
+    notification.className = `notification ${type}`;
+    notificationMessage.textContent = message;
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
+}
+
+function openSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            modal.style.display = 'block';
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+            
+            // Load current settings
+            document.getElementById('usernameInput').value = localStorage.getItem('username') || '';
+            document.getElementById('logoUpload').value = localStorage.getItem('logo') || '';
+            document.getElementById('logoPreview').src = localStorage.getItem('logo') || 'logo2.png';
+            document.getElementById('usernamePreview').textContent = localStorage.getItem('username') || 'Khukuri Steps';
+            
+            // Password fields
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('confirmPasswordInput').value = '';
+            document.getElementById('confirmPasswordGroup').style.display = 'none';
+        }
+
+        function closeSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        // Add event listener for the close button
+        document.getElementById('closeSettingsModal').addEventListener('click', function(e) {
+            e.preventDefault();
+            closeSettingsModal();
+        });
+
+        // Close modal when clicking outside the modal content
+        document.getElementById('settingsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSettingsModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('settingsModal').style.display === 'block') {
+                closeSettingsModal();
+            }
+        });
+
+function saveSettings() {
+    const username = document.getElementById('usernameInput').value.trim();
+    const logo = document.getElementById('logoUpload').value.trim();
+    const password = document.getElementById('passwordInput').value;
+    const confirmPassword = document.getElementById('confirmPasswordInput').value;
+    
+    // Validate password if being set
+    if (password.length > 0) {
+        if (password !== confirmPassword) {
+            showNotification("Passwords do not match!", "error");
+            return;
+        }
+        if (password.length < 4) {
+            showNotification("Password must be at least 4 characters", "error");
+            return;
+        }
+        localStorage.setItem('dashboardPassword', password);
+    } else if (localStorage.getItem('dashboardPassword')) {
+        // If password field is empty but password exists, remove it
+        localStorage.removeItem('dashboardPassword');
+    }
+    
+    if (username) {
+        localStorage.setItem('username', username);
+        document.getElementById('usernameDisplay').textContent = username;
+    }
+    
+    if (logo) {
+        localStorage.setItem('logo', logo);
+        document.getElementById('logo').src = logo;
+        document.getElementById('lockScreenLogo').src = logo;
+    }
+    
+    closeSettingsModal();
+    showNotification("Settings saved successfully", "success");
+    
+    // Check if we need to lock the dashboard now
+    checkPasswordProtection();
+}
+
+function resetToDefault() {
+    const randomNumber = Math.floor(Math.random() * 10000);
+    const defaultUsername = `@user${randomNumber}`;
+    const defaultLogo = 'logo2.png';
+    
+    document.getElementById('usernameInput').value = defaultUsername;
+    document.getElementById('logoUpload').value = defaultLogo;
+    document.getElementById('logoPreview').src = defaultLogo;
+    document.getElementById('usernamePreview').textContent = defaultUsername;
+    
+    // Clear password fields
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('confirmPasswordInput').value = '';
+    document.getElementById('confirmPasswordGroup').style.display = 'none';
+    
+    showNotification("Reset to default settings", "info");
+}
+
+// Initialize on load
+window.onload = function() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        document.body.classList.add(savedTheme);
+    }
+    
+    // First check password protection
+    checkPasswordProtection();
+    
+    // Then initialize the dashboard if unlocked
+    if (document.getElementById('mainDashboard').style.display !== 'none') {
+        initializeDashboard();
+    }
+    
+    // Handle password input changes
+    document.getElementById('passwordInput').addEventListener('input', toggleConfirmPasswordField);
+};
+
+// Handle fullscreen change events
+document.addEventListener('fullscreenchange', function() {
+    const exitBtn = document.querySelector('.fullscreen-exit');
+    if (document.fullscreenElement) {
+        exitBtn.style.display = 'block';
+    } else {
+        exitBtn.style.display = 'none';
+    }
+});
+</script>
 </body>
 </html>

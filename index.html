@@ -40,6 +40,101 @@
             -webkit-text-size-adjust: 100%;
         }
 
+        /* Home Page Styles */
+        .home-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .home-logo {
+            height: 120px;
+            width: 120px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .home-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            font-weight: 900;
+        }
+
+        .home-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: var(--text-color);
+            opacity: 0.9;
+            max-width: 600px;
+        }
+
+        .home-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .home-features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto 30px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            width: 280px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+
+        .feature-desc {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .home-footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+
+        /* Dashboard Styles (existing styles) */
         header {
             display: flex;
             flex-wrap: wrap;
@@ -740,6 +835,74 @@
             font-weight: 500;
         }
 
+        .hint-message {
+            color: var(--accent-color);
+            margin-top: 10px;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .attempts-counter {
+            color: var(--warning-color);
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .lockout-timer {
+            color: var(--danger-color);
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .account-card {
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .account-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .account-card img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-color);
+        }
+
+        .account-card .account-info {
+            flex-grow: 1;
+        }
+
+        .account-card .account-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .account-card .account-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .account-list {
+            max-width: 600px;
+            width: 100%;
+            margin: 20px auto;
+        }
+
+        .add-account-btn {
+            margin-top: 20px;
+            width: 100%;
+        }
+
         /* Responsive adjustments */
         @media (min-width: 768px) {
             .container {
@@ -798,6 +961,15 @@
             
             .history-controls {
                 gap: 10px;
+            }
+
+            /* Home page responsive */
+            .home-title {
+                font-size: 3.5rem;
+            }
+
+            .home-subtitle {
+                font-size: 1.4rem;
             }
         }
 
@@ -873,6 +1045,23 @@
                 height: 60px;
                 width: 60px;
             }
+
+            /* Home page mobile */
+            .home-title {
+                font-size: 2rem;
+            }
+
+            .home-subtitle {
+                font-size: 1rem;
+            }
+
+            .home-buttons button {
+                width: 100%;
+            }
+
+            .feature-card {
+                width: 100%;
+            }
         }
 
         /* Orientation-specific adjustments */
@@ -889,10 +1078,227 @@
                 max-width: 300px;
             }
         }
+        /* Welcome Screen Styles */
+.welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9998;
+    animation: fadeIn 0.5s ease;
+}
+
+.welcome-content {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.5s ease;
+}
+
+.welcome-logo {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    border: 3px solid var(--accent-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.welcome-screen h1 {
+    color: var(--accent-color);
+    margin-bottom: 25px;
+    font-size: 28px;
+}
+
+.welcome-stats {
+    background: var(--input-bg);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+.welcome-stats .stat-item {
+    margin: 15px 0;
+    font-size: 18px;
+}
+
+.welcome-stats .stat-label {
+    color: var(--text-color);
+    opacity: 0.8;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.welcome-stats .stat-value {
+    color: var(--accent-color);
+    font-weight: 600;
+    font-size: 22px;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+.account-actions button {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.account-actions button:hover {
+    transform: scale(1.1);
+    opacity: 0.9;
+}
     </style>
     <link rel="shortcut icon" href="logo2.png" type="image/x-icon">
 </head>
 <body>
+    <!-- Home Page -->
+    <div class="home-page" id="homePage">
+        <img src="logo2.png" alt="Logo" class="home-logo">
+        <h1 class="home-title">Transaction Dashboard</h1>
+        <p class="home-subtitle">Track your financial transactions, visualize your capital flow, and manage your profits & losses with ease</p>
+        
+        <div class="home-buttons">
+            <button class="btn-primary" onclick="navigateToDashboard()">
+                <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+            </button>
+            <button class="btn-secondary" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i> Toggle Theme
+            </button>
+        </div>
+        
+        <div class="home-features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="feature-title">Visual Analytics</h3>
+                <p class="feature-desc">Interactive charts to visualize your capital flow and transaction history with color-coded categories.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <h3 class="feature-title">Transaction Tracking</h3>
+                <p class="feature-desc">Record deposits, withdrawals, profits, and losses with detailed descriptions and dates.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3 class="feature-title">Password Protection</h3>
+                <p class="feature-desc">Secure your financial data with optional password protection and auto-lock feature.</p>
+            </div>
+        </div>
+        
+        <div class="home-footer">
+            <p>Your data is stored locally in your browser - no servers, no tracking, just privacy.</p>
+        </div>
+    </div>
+
+    <!-- Accounts Selection Screen -->
+    <div class="home-page" id="accountsPage" style="display: none;">
+        <img src="logo2.png" alt="Logo" class="home-logo">
+        <h1 class="home-title">Select Account</h1>
+        <p class="home-subtitle">Choose an account to access its dashboard</p>
+        
+        <div class="account-list" id="accountList">
+            <!-- Accounts will be dynamically added here -->
+        </div>
+        
+        <button class="btn-primary add-account-btn" onclick="openAddAccountModal()">
+            <i class="fas fa-plus"></i> Add New Account
+        </button>
+        
+        <div class="home-buttons" style="margin-top: 30px;">
+            <button class="btn-secondary" onclick="navigateToHome()">
+                <i class="fas fa-home"></i> Back to Home
+            </button>
+        </div>
+    </div>
+
+    <!-- Add Account Modal -->
+    <div class="modal" id="addAccountModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAddAccountModal()">&times;</span>
+            <h3 class="section-title">Add New Account</h3>
+
+            <div class="form-group">
+                <label for="newAccountName">Account Name:</label>
+                <input type="text" id="newAccountName" placeholder="Enter account name">
+            </div>
+            
+            <div class="form-group">
+                <label for="newAccountLogo">Logo (URL or base64):</label>
+                <input type="text" id="newAccountLogo" placeholder="Enter image URL or paste base64">
+                <small>Or click the logo to upload</small>
+            </div>
+            
+            <div class="form-group">
+                <label>Preview:</label>
+                <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                    <img src="logo2.png" alt="Logo Preview" id="newAccountLogoPreview" style="height: 60px; width: 60px; border-radius: 50%; border: 2px solid var(--accent-color); cursor: pointer;">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="newAccountPassword">Password (Optional):</label>
+                <input type="password" id="newAccountPassword" placeholder="Set a password (leave blank to disable)" oninput="toggleNewAccountPasswordFields()">
+            </div>
+            <div class="form-group" id="newAccountConfirmPasswordGroup" style="display: none;">
+                <label for="newAccountConfirmPassword">Confirm Password:</label>
+                <input type="password" id="newAccountConfirmPassword" placeholder="Confirm your password">
+            </div>
+            <div class="form-group" id="newAccountPasswordHintGroup" style="display: none;">
+                <label for="newAccountPasswordHint">Password Hint (Optional):</label>
+                <input type="text" id="newAccountPasswordHint" placeholder="Enter a hint to remember your password">
+            </div>
+            
+            <div class="button-group" style="margin-top: 20px;">
+                <button class="btn-primary" onclick="createNewAccount()">
+                    <i class="fas fa-save"></i> Create Account
+                </button>
+                <button class="btn-danger" onclick="closeAddAccountModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Welcome Screen -->
+<div class="welcome-screen" id="welcomeScreen" style="display: none;">
+    <div class="welcome-content">
+        <img src="logo2.png" alt="Logo" class="welcome-logo">
+        <h1 id="welcomeAccountName">Welcome</h1>
+        <div class="welcome-stats">
+            <div class="stat-item">
+                <span class="stat-label">Total Balance</span>
+                <span class="stat-value" id="welcomeTotalPL">$0.00</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Pure P&L</span>
+                <span class="stat-value" id="welcomeTotalCapital">$0.00</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Transactions</span>
+                <span class="stat-value" id="welcomeTransactionCount">0</span>
+            </div>
+        </div>
+        <button class="btn-primary" onclick="closeWelcomeScreen()">
+            <i class="fas fa-arrow-right"></i> Continue to Dashboard
+        </button>
+    </div>
+</div>
+
     <!-- Lock Screen (shown when password is set) -->
     <div class="lock-screen" id="lockScreen">
         <img src="logo2.png" alt="Logo" class="logo" id="lockScreenLogo">
@@ -904,6 +1310,13 @@
         <p class="error-message" id="unlockError">
             Incorrect password. Please try again.
         </p>
+        <p class="hint-message" id="passwordHintDisplay" style="display: none;"></p>
+        <div class="attempts-counter" id="attemptsCounter" style="display: none;">
+            Attempts remaining: <span id="remainingAttempts">5</span>
+        </div>
+        <div class="lockout-timer" id="lockoutTimer" style="display: none;">
+            Try again in: <span id="timerDisplay">10:00</span>
+        </div>
     </div>
 
     <!-- Main Dashboard (hidden when locked) -->
@@ -923,6 +1336,9 @@
                 </button>
                 <button class="btn-danger" id="deleteDataBtn">
                     <i class="fas fa-trash-alt"></i> Clear All
+                </button>
+                <button class="btn-warning" onclick="navigateToAccounts()">
+                    <i class="fas fa-users"></i> Switch Account
                 </button>
             </div>
         </header>
@@ -1112,6 +1528,10 @@
                 <label for="confirmPasswordInput">Confirm Password:</label>
                 <input type="password" id="confirmPasswordInput" placeholder="Confirm your password">
             </div>
+            <div class="form-group" id="passwordHintGroup" style="display: none;">
+                <label for="passwordHintInput">Password Hint (Optional):</label>
+                <input type="text" id="passwordHintInput" placeholder="Enter a hint to remember your password">
+            </div>
             
             <div class="button-group" style="margin-top: 20px;">
                 <button class="btn-primary" onclick="saveSettings()">
@@ -1129,41 +1549,329 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-// Transaction Dashboard - Complete JavaScript Code
-let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-let graphLabels = JSON.parse(localStorage.getItem('graphLabels')) || [];
-let graphData = JSON.parse(localStorage.getItem('graphData')) || [];
-let totalPL = localStorage.getItem('totalPL') ? parseFloat(localStorage.getItem('totalPL')) : 0;
-let totalCapital = localStorage.getItem('totalCapital') ? parseFloat(localStorage.getItem('totalCapital')) : 0;
-let firstTransactionDate = localStorage.getItem('firstTransactionDate');
-let undoStack = JSON.parse(localStorage.getItem('undoStack')) || [];
-let redoStack = JSON.parse(localStorage.getItem('redoStack')) || [];
-let isFullHistory = localStorage.getItem('isFullHistory') === 'true';
-let currentFilter = localStorage.getItem('currentFilter') || 'all';
-const MAX_TRANSACTIONS_IN_VIEW = 15;
-let profitLossChart;
+// Transaction Dashboard - Complete JavaScript Code with all new features
+let transactions = [];
+let graphLabels = [];
+let graphData = [];
+let totalPL = 0;
+let totalCapital = 0;
+let firstTransactionDate = '';
+let undoStack = [];
+let redoStack = [];
+let isFullHistory = false;
+let currentFilter = 'all';
+let incorrectAttempts = 0;
+let lockoutEndTime = null;
+let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+let currentAccountId = localStorage.getItem('currentAccountId');
 let currentlyEditingIndex = -1;
 let inactivityTimer;
 const INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 minutes in milliseconds
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
+const MAX_TRANSACTIONS_IN_VIEW = 15;
+let profitLossChart;
+
+// Navigation functions
+function navigateToDashboard() {
+    document.getElementById('homePage').style.display = 'none';
+    if (accounts.length === 0) {
+        createDefaultAccount();
+    }
+    showAccountsPage();
+}
+
+function navigateToHome() {
+    document.getElementById('homePage').style.display = 'flex';
+    document.getElementById('accountsPage').style.display = 'none';
+    document.getElementById('mainDashboard').style.display = 'none';
+    document.getElementById('lockScreen').style.display = 'none';
+}
+
+function navigateToAccounts() {
+    document.getElementById('mainDashboard').style.display = 'none';
+    showAccountsPage();
+}
+
+function showAccountsPage() {
+    document.getElementById('homePage').style.display = 'none';
+    document.getElementById('accountsPage').style.display = 'flex';
+    document.getElementById('mainDashboard').style.display = 'none';
+    document.getElementById('lockScreen').style.display = 'none';
+    renderAccountsList();
+}
+
+function renderAccountsList() {
+    const accountList = document.getElementById('accountList');
+    accountList.innerHTML = '';
+    
+    accounts.forEach(account => {
+        const accountCard = document.createElement('div');
+        accountCard.className = 'account-card';
+        accountCard.onclick = (e) => selectAccount(account.id, e);
+        
+       accountCard.innerHTML = `
+    <img src="${account.logo || 'logo2.png'}" alt="Account Logo">
+    <div class="account-info">
+        <div class="account-name">${account.name}</div>
+        <small>${account.transactions?.length || 0} transactions</small>
+    </div>
+    <div class="account-actions">
+        <button class="btn-danger btn-sm" onclick="deleteAccount('${account.id}', event); event.stopPropagation();">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+`;
+        
+        accountList.appendChild(accountCard);
+    });
+}
+
+function selectAccount(accountId, event) {
+    // Prevent the event from bubbling up if this was triggered by a delete button click
+    if (event && event.target.closest('.btn-danger')) {
+        return;
+    }
+    
+    const account = accounts.find(acc => acc.id === accountId);
+    if (!account) return;
+    
+    currentAccountId = accountId;
+    saveAccounts();
+    
+    // Load the account data
+    transactions = account.transactions || [];
+    graphLabels = account.graphLabels || [];
+    graphData = account.graphData || [];
+    totalPL = account.totalPL || 0;
+    totalCapital = account.totalCapital || 0;
+    firstTransactionDate = account.firstTransactionDate || '';
+    undoStack = account.undoStack || [];
+    redoStack = account.redoStack || [];
+    isFullHistory = account.isFullHistory || false;
+    currentFilter = account.currentFilter || 'all';
+
+    // Check if account has password
+    if (account.password) {
+        document.getElementById('homePage').style.display = 'none';
+        document.getElementById('accountsPage').style.display = 'none';
+        document.getElementById('lockScreen').style.display = 'flex';
+        document.getElementById('mainDashboard').style.display = 'none';
+        document.getElementById('unlockPassword').focus();
+        document.getElementById('lockScreenLogo').src = account.logo || 'logo2.png';
+        
+        // Reset unlock UI
+        document.getElementById('unlockError').style.display = 'none';
+        document.getElementById('passwordHintDisplay').style.display = 'none';
+        document.getElementById('attemptsCounter').style.display = 'none';
+        document.getElementById('lockoutTimer').style.display = 'none';
+        
+        // Show hint if available
+        if (account.passwordHint) {
+            document.getElementById('passwordHintDisplay').textContent = `Hint: ${account.passwordHint}`;
+        }
+    } else {
+        // No password, show welcome screen
+        document.getElementById('accountsPage').style.display = 'none';
+        document.getElementById('mainDashboard').style.display = 'none';
+        document.getElementById('usernameDisplay').textContent = account.name;
+        document.getElementById('logo').src = account.logo || 'logo2.png';
+        showWelcomeScreen(account);
+    }
+}
+
+function openAddAccountModal() {
+    const modal = document.getElementById('addAccountModal');
+    modal.style.display = 'block';
+    setTimeout(() => {
+        modal.classList.add('show');
+    }, 10);
+    
+    // Reset form
+    document.getElementById('newAccountName').value = '';
+    document.getElementById('newAccountLogo').value = '';
+    document.getElementById('newAccountLogoPreview').src = 'logo2.png';
+    document.getElementById('newAccountPassword').value = '';
+    document.getElementById('newAccountConfirmPassword').value = '';
+    document.getElementById('newAccountPasswordHint').value = '';
+    document.getElementById('newAccountConfirmPasswordGroup').style.display = 'none';
+    document.getElementById('newAccountPasswordHintGroup').style.display = 'none';
+}
+
+function closeAddAccountModal() {
+    const modal = document.getElementById('addAccountModal');
+    modal.classList.remove('show');
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300);
+}
+
+function toggleNewAccountPasswordFields() {
+    const passwordInput = document.getElementById('newAccountPassword');
+    const confirmGroup = document.getElementById('newAccountConfirmPasswordGroup');
+    const hintGroup = document.getElementById('newAccountPasswordHintGroup');
+    
+    if (passwordInput.value.length > 0) {
+        confirmGroup.style.display = 'block';
+        hintGroup.style.display = 'block';
+    } else {
+        confirmGroup.style.display = 'none';
+        hintGroup.style.display = 'none';
+        document.getElementById('newAccountConfirmPassword').value = '';
+        document.getElementById('newAccountPasswordHint').value = '';
+    }
+}
+
+function createNewAccount() {
+    const name = document.getElementById('newAccountName').value.trim();
+    const logo = document.getElementById('newAccountLogo').value.trim() || 'logo2.png';
+    const password = document.getElementById('newAccountPassword').value;
+    const confirmPassword = document.getElementById('newAccountConfirmPassword').value;
+    const passwordHint = document.getElementById('newAccountPasswordHint').value;
+    
+    if (!name) {
+        showNotification('Please enter an account name', 'error');
+        return;
+    }
+    
+    if (password && password !== confirmPassword) {
+        showNotification('Passwords do not match!', 'error');
+        return;
+    }
+    
+    const newAccount = {
+        id: generateId(),
+        name: name,
+        logo: logo,
+        password: password,
+        passwordHint: password ? passwordHint : '',
+        transactions: [],
+        graphLabels: [],
+        graphData: [],
+        totalPL: 0,
+        totalCapital: 0,
+        firstTransactionDate: '',
+        undoStack: [],
+        redoStack: [],
+        isFullHistory: false,
+        currentFilter: 'all'
+    };
+    
+    accounts.push(newAccount);
+    saveAccounts();
+    closeAddAccountModal();
+    renderAccountsList();
+    showNotification('Account created successfully!', 'success');
+}
+
+function deleteAccount(accountId, event) {
+    event.stopPropagation(); // Prevent the account card click event
+    event.preventDefault(); // Additional prevention
+    
+    if (accounts.length <= 1) {
+        showNotification('You must have at least one account', 'error');
+        return;
+    }
+    
+    if (confirm('Are you sure you want to delete this account? All data will be lost!')) {
+        accounts = accounts.filter(acc => acc.id !== accountId);
+        saveAccounts();
+        
+        if (currentAccountId === accountId) {
+            // If we deleted the current account, switch to another one
+            currentAccountId = accounts[0].id;
+            saveAccounts();
+        }
+        
+        renderAccountsList();
+        showNotification('Account deleted', 'success');
+    }
+}
+function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+}
+
+function loadAccount(accountId) {
+    const account = accounts.find(acc => acc.id === accountId);
+    if (!account) return;
+    
+    currentAccountId = accountId;
+    saveAccounts();
+    
+    // Load all account data
+    transactions = account.transactions || [];
+    graphLabels = account.graphLabels || [];
+    graphData = account.graphData || [];
+    totalPL = account.totalPL || 0;
+    totalCapital = account.totalCapital || 0;
+    firstTransactionDate = account.firstTransactionDate || '';
+    undoStack = account.undoStack || [];
+    redoStack = account.redoStack || [];
+    isFullHistory = account.isFullHistory || false;
+    currentFilter = account.currentFilter || 'all';
+    
+    // Update UI
+    document.getElementById('usernameDisplay').textContent = account.name;
+    document.getElementById('logo').src = account.logo || 'logo2.png';
+    document.getElementById('lockScreenLogo').src = account.logo || 'logo2.png';
+    
+    // Save state and initialize
+    saveState();
+    initializeDashboard();
+}
+function showWelcomeScreen(account) {
+    document.getElementById('welcomeScreen').style.display = 'flex';
+    document.getElementById('welcomeAccountName').textContent = `Welcome, ${account.name}`;
+    document.getElementById('welcomeTotalPL').textContent = `$${account.totalPL?.toFixed(2) || '0.00'}`;
+    document.getElementById('welcomeTotalCapital').textContent = `$${account.totalCapital?.toFixed(2) || '0.00'}`;
+    document.getElementById('welcomeTransactionCount').textContent = account.transactions?.length || 0;
+    document.getElementById('welcome-logo').src = account.logo || 'logo2.png';
+}
+
+function closeWelcomeScreen() {
+    document.getElementById('welcomeScreen').style.display = 'none';
+    document.getElementById('mainDashboard').style.display = 'block';
+    initializeDashboard();
+}
+
+function getCurrentAccount() {
+    return accounts.find(acc => acc.id === currentAccountId) || 
+           accounts[0] || 
+           createDefaultAccount();
+}
+
+function createDefaultAccount() {
+    const defaultAccount = {
+        id: generateId(),
+        name: 'Default Account',
+        logo: 'logo2.png',
+        password: '',
+        passwordHint: '',
+        transactions: [],
+        graphLabels: [],
+        graphData: [],
+        totalPL: 0,
+        totalCapital: 0,
+        firstTransactionDate: '',
+        undoStack: [],
+        redoStack: [],
+        isFullHistory: false,
+        currentFilter: 'all'
+    };
+    
+    accounts.push(defaultAccount);
+    currentAccountId = defaultAccount.id;
+    saveAccounts();
+    return defaultAccount;
+}
+
+function saveAccounts() {
+    localStorage.setItem('accounts', JSON.stringify(accounts));
+    localStorage.setItem('currentAccountId', currentAccountId);
+}
 
 // Initialize Dashboard
 function initializeDashboard() {
-    // Set random username if not already set
-    if (!localStorage.getItem('username')) {
-        const randomNumber = Math.floor(Math.random() * 10000);
-        localStorage.setItem('username', `@user${randomNumber}`);
-    }
-    
-    // Set logo if not already set
-    if (!localStorage.getItem('logo')) {
-        localStorage.setItem('logo', 'logo2.png');
-    }
-    
-    // Update UI with saved username and logo
-    document.getElementById('usernameDisplay').textContent = localStorage.getItem('username');
-    document.getElementById('logo').src = localStorage.getItem('logo');
-    document.getElementById('lockScreenLogo').src = localStorage.getItem('logo');
-    
     setupChart();
     setupEventListeners();
     recalculateAllBalances();
@@ -1177,14 +1885,28 @@ function initializeDashboard() {
 }
 
 function checkPasswordProtection() {
-    const password = localStorage.getItem('dashboardPassword');
-    if (password) {
-        // Show lock screen only if password exists
+    const account = getCurrentAccount();
+    if (!account) return;
+    
+    if (account.password) {
+        // Check if we're in lockout period
+        if (lockoutEndTime && new Date().getTime() < lockoutEndTime) {
+            showLockoutTimer();
+            return;
+        }
+        
+        document.getElementById('homePage').style.display = 'none';
         document.getElementById('lockScreen').style.display = 'flex';
         document.getElementById('mainDashboard').style.display = 'none';
         document.getElementById('unlockPassword').focus();
+        document.getElementById('lockScreenLogo').src = account.logo || 'logo2.png';
+        
+        // Show hint if available
+        if (account.passwordHint) {
+            document.getElementById('passwordHintDisplay').textContent = `Hint: ${account.passwordHint}`;
+        }
     } else {
-        // No password set, show dashboard
+        document.getElementById('homePage').style.display = 'none';
         document.getElementById('lockScreen').style.display = 'none';
         document.getElementById('mainDashboard').style.display = 'block';
         initializeDashboard();
@@ -1193,30 +1915,103 @@ function checkPasswordProtection() {
 
 function unlockDashboard() {
     const enteredPassword = document.getElementById('unlockPassword').value;
-    const storedPassword = localStorage.getItem('dashboardPassword');
+    const account = getCurrentAccount();
     
-    if (enteredPassword === storedPassword) {
+    // Check if we're in lockout period
+    if (lockoutEndTime && new Date().getTime() < lockoutEndTime) {
+        showLockoutTimer();
+        return;
+    }
+    
+    if (enteredPassword === account.password) {
+        // Successful login
+        incorrectAttempts = 0;
+        lockoutEndTime = null;
         document.getElementById('lockScreen').style.display = 'none';
-        document.getElementById('mainDashboard').style.display = 'block';
         document.getElementById('unlockError').style.display = 'none';
+        document.getElementById('passwordHintDisplay').style.display = 'none';
         document.getElementById('unlockPassword').value = '';
-        initializeDashboard();
+        document.getElementById('attemptsCounter').style.display = 'none';
+        document.getElementById('lockoutTimer').style.display = 'none';
+        
+        // Show welcome screen instead of going directly to dashboard
+        showWelcomeScreen(account);
     } else {
+        // Failed login
+        incorrectAttempts++;
+        const remainingAttempts = Math.max(0, MAX_ATTEMPTS - incorrectAttempts);
+        
+        // Show error message
         document.getElementById('unlockError').style.display = 'block';
         document.getElementById('unlockPassword').value = '';
         document.getElementById('unlockPassword').focus();
+        
+        // Show password hint after first failed attempt
+        if (incorrectAttempts === 1 && account.passwordHint) {
+            document.getElementById('passwordHintDisplay').style.display = 'block';
+        }
+        
+        // Show attempts counter
+        document.getElementById('remainingAttempts').textContent = remainingAttempts;
+        document.getElementById('attemptsCounter').style.display = 'block';
+        
+        if (remainingAttempts <= 0) {
+            // Start lockout period
+            lockoutEndTime = new Date().getTime() + LOCKOUT_DURATION;
+            showLockoutTimer();
+            showNotification('Too many incorrect attempts. Account locked for 10 minutes.', 'error');
+        } else {
+            showNotification(`Incorrect password. ${remainingAttempts} attempts remaining.`, 'error');
+        }
     }
+}
+
+function showLockoutTimer() {
+    document.getElementById('unlockError').style.display = 'none';
+    document.getElementById('attemptsCounter').style.display = 'none';
+    document.getElementById('lockoutTimer').style.display = 'block';
+    
+    const timerDisplay = document.getElementById('timerDisplay');
+    const updateTimer = () => {
+        const now = new Date().getTime();
+        const distance = lockoutEndTime - now;
+        
+        if (distance <= 0) {
+            // Lockout period over
+            lockoutEndTime = null;
+            document.getElementById('lockoutTimer').style.display = 'none';
+            document.getElementById('unlockPassword').value = '';
+            document.getElementById('unlockPassword').focus();
+            return;
+        }
+        
+        // Calculate minutes and seconds
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        // Display the result
+        timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        
+        // Update every second
+        setTimeout(updateTimer, 1000);
+    };
+    
+    updateTimer();
 }
 
 function toggleConfirmPasswordField() {
     const passwordInput = document.getElementById('passwordInput');
     const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+    const passwordHintGroup = document.getElementById('passwordHintGroup');
     
     if (passwordInput.value.length > 0) {
         confirmPasswordGroup.style.display = 'block';
+        passwordHintGroup.style.display = 'block';
     } else {
         confirmPasswordGroup.style.display = 'none';
+        passwordHintGroup.style.display = 'none';
         document.getElementById('confirmPasswordInput').value = '';
+        document.getElementById('passwordHintInput').value = '';
     }
 }
 
@@ -1477,11 +2272,36 @@ function setupEventListeners() {
         input.click();
     });
     
+    document.getElementById('newAccountLogoPreview').addEventListener('click', function() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('newAccountLogoPreview').src = event.target.result;
+                    document.getElementById('newAccountLogo').value = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+        input.click();
+    });
+    
     // Logo URL change handler
     document.getElementById('logoUpload').addEventListener('input', function() {
         const value = this.value.trim();
         if (value) {
             document.getElementById('logoPreview').src = value;
+        }
+    });
+    
+    document.getElementById('newAccountLogo').addEventListener('input', function() {
+        const value = this.value.trim();
+        if (value) {
+            document.getElementById('newAccountLogoPreview').src = value;
         }
     });
     
@@ -1509,12 +2329,16 @@ function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
     
     // Only set timer if password protection is enabled
-    if (localStorage.getItem('dashboardPassword')) {
+    const account = getCurrentAccount();
+    if (account && account.password) {
         inactivityTimer = setTimeout(lockDashboard, INACTIVITY_TIMEOUT);
     }
 }
 
 function lockDashboard() {
+    const account = getCurrentAccount();
+    if (!account || !account.password) return;
+    
     if (document.getElementById('mainDashboard').style.display !== 'none') {
         document.getElementById('lockScreen').style.display = 'flex';
         document.getElementById('mainDashboard').style.display = 'none';
@@ -1524,16 +2348,21 @@ function lockDashboard() {
 }
 
 function saveState() {
-    localStorage.setItem('transactions', JSON.stringify(transactions));
-    localStorage.setItem('graphLabels', JSON.stringify(graphLabels));
-    localStorage.setItem('graphData', JSON.stringify(graphData));
-    localStorage.setItem('totalPL', totalPL);
-    localStorage.setItem('totalCapital', totalCapital);
-    localStorage.setItem('firstTransactionDate', firstTransactionDate || '');
-    localStorage.setItem('undoStack', JSON.stringify(undoStack));
-    localStorage.setItem('redoStack', JSON.stringify(redoStack));
-    localStorage.setItem('isFullHistory', isFullHistory);
-    localStorage.setItem('currentFilter', currentFilter);
+    const account = getCurrentAccount();
+    if (!account) return;
+    
+    account.transactions = transactions;
+    account.graphLabels = graphLabels;
+    account.graphData = graphData;
+    account.totalPL = totalPL;
+    account.totalCapital = totalCapital;
+    account.firstTransactionDate = firstTransactionDate;
+    account.undoStack = undoStack;
+    account.redoStack = redoStack;
+    account.isFullHistory = isFullHistory;
+    account.currentFilter = currentFilter;
+    
+    saveAccounts();
 }
 
 function submitTransaction() {
@@ -1775,9 +2604,25 @@ function redoTransaction() {
 }
 
 function confirmDeleteAllData() {
-    if (confirm("Are you sure you want to delete ALL data? This cannot be undone!")) {
-        localStorage.clear();
-        location.reload();
+    if (confirm("Are you sure you want to delete ALL data for this account? This cannot be undone!")) {
+        const account = getCurrentAccount();
+        if (!account) return;
+        
+        // Reset account data
+        account.transactions = [];
+        account.graphLabels = [];
+        account.graphData = [];
+        account.totalPL = 0;
+        account.totalCapital = 0;
+        account.firstTransactionDate = '';
+        account.undoStack = [];
+        account.redoStack = [];
+        account.isFullHistory = false;
+        account.currentFilter = 'all';
+        
+        saveAccounts();
+        loadAccount(account.id);
+        showNotification("All data cleared for this account", "success");
     }
 }
 
@@ -1947,57 +2792,70 @@ function showNotification(message, type = 'success') {
 }
 
 function openSettingsModal() {
-            const modal = document.getElementById('settingsModal');
-            modal.style.display = 'block';
-            setTimeout(() => {
-                modal.classList.add('show');
-            }, 10);
-            
-            // Load current settings
-            document.getElementById('usernameInput').value = localStorage.getItem('username') || '';
-            document.getElementById('logoUpload').value = localStorage.getItem('logo') || '';
-            document.getElementById('logoPreview').src = localStorage.getItem('logo') || 'logo2.png';
-            document.getElementById('usernamePreview').textContent = localStorage.getItem('username') || 'Khukuri Steps';
-            
-            // Password fields
-            document.getElementById('passwordInput').value = '';
-            document.getElementById('confirmPasswordInput').value = '';
-            document.getElementById('confirmPasswordGroup').style.display = 'none';
-        }
+    const modal = document.getElementById('settingsModal');
+    modal.style.display = 'block';
+    setTimeout(() => {
+        modal.classList.add('show');
+    }, 10);
+    
+    // Load current settings
+    const account = getCurrentAccount();
+    if (!account) return;
+    
+    document.getElementById('usernameInput').value = account.name || '';
+    document.getElementById('logoUpload').value = account.logo || '';
+    document.getElementById('logoPreview').src = account.logo || 'logo2.png';
+    document.getElementById('usernamePreview').textContent = account.name || 'Khukuri Steps';
+    
+    // Password fields
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('confirmPasswordInput').value = '';
+    document.getElementById('passwordHintInput').value = account.passwordHint || '';
+    document.getElementById('confirmPasswordGroup').style.display = 'none';
+    document.getElementById('passwordHintGroup').style.display = 'none';
+}
 
-        function closeSettingsModal() {
-            const modal = document.getElementById('settingsModal');
-            modal.classList.remove('show');
-            setTimeout(() => {
-                modal.style.display = 'none';
-            }, 300);
-        }
+function closeSettingsModal() {
+    const modal = document.getElementById('settingsModal');
+    modal.classList.remove('show');
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300);
+}
 
-        // Add event listener for the close button
-        document.getElementById('closeSettingsModal').addEventListener('click', function(e) {
-            e.preventDefault();
-            closeSettingsModal();
-        });
+// Add event listener for the close button
+document.getElementById('closeSettingsModal').addEventListener('click', function(e) {
+    e.preventDefault();
+    closeSettingsModal();
+});
 
-        // Close modal when clicking outside the modal content
-        document.getElementById('settingsModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeSettingsModal();
-            }
-        });
+// Close modal when clicking outside the modal content
+document.getElementById('settingsModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeSettingsModal();
+    }
+});
 
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && document.getElementById('settingsModal').style.display === 'block') {
-                closeSettingsModal();
-            }
-        });
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && document.getElementById('settingsModal').style.display === 'block') {
+        closeSettingsModal();
+    }
+    
+    if (e.key === 'Escape' && document.getElementById('addAccountModal').style.display === 'block') {
+        closeAddAccountModal();
+    }
+});
 
 function saveSettings() {
-    const username = document.getElementById('usernameInput').value.trim();
-    const logo = document.getElementById('logoUpload').value.trim();
+    const account = getCurrentAccount();
+    if (!account) return;
+    
+    const name = document.getElementById('usernameInput').value.trim();
+    const logo = document.getElementById('logoUpload').value.trim() || 'logo2.png';
     const password = document.getElementById('passwordInput').value;
     const confirmPassword = document.getElementById('confirmPasswordInput').value;
+    const passwordHint = document.getElementById('passwordHintInput').value;
     
     // Validate password if being set
     if (password.length > 0) {
@@ -2009,44 +2867,51 @@ function saveSettings() {
             showNotification("Password must be at least 4 characters", "error");
             return;
         }
-        localStorage.setItem('dashboardPassword', password);
-    } else if (localStorage.getItem('dashboardPassword')) {
+        account.password = password;
+        account.passwordHint = passwordHint;
+    } else if (account.password) {
         // If password field is empty but password exists, remove it
-        localStorage.removeItem('dashboardPassword');
+        account.password = '';
+        account.passwordHint = '';
     }
     
-    if (username) {
-        localStorage.setItem('username', username);
-        document.getElementById('usernameDisplay').textContent = username;
+    if (name) {
+        account.name = name;
     }
     
     if (logo) {
-        localStorage.setItem('logo', logo);
-        document.getElementById('logo').src = logo;
-        document.getElementById('lockScreenLogo').src = logo;
+        account.logo = logo;
     }
     
+    saveAccounts();
     closeSettingsModal();
     showNotification("Settings saved successfully", "success");
     
-    // Check if we need to lock the dashboard now
-    checkPasswordProtection();
+    // Update UI
+    document.getElementById('usernameDisplay').textContent = account.name;
+    document.getElementById('logo').src = account.logo || 'logo2.png';
+    document.getElementById('lockScreenLogo').src = account.logo || 'logo2.png';
 }
 
 function resetToDefault() {
+    const account = getCurrentAccount();
+    if (!account) return;
+    
     const randomNumber = Math.floor(Math.random() * 10000);
-    const defaultUsername = `@user${randomNumber}`;
+    const defaultName = `@user${randomNumber}`;
     const defaultLogo = 'logo2.png';
     
-    document.getElementById('usernameInput').value = defaultUsername;
+    document.getElementById('usernameInput').value = defaultName;
     document.getElementById('logoUpload').value = defaultLogo;
     document.getElementById('logoPreview').src = defaultLogo;
-    document.getElementById('usernamePreview').textContent = defaultUsername;
+    document.getElementById('usernamePreview').textContent = defaultName;
     
     // Clear password fields
     document.getElementById('passwordInput').value = '';
     document.getElementById('confirmPasswordInput').value = '';
+    document.getElementById('passwordHintInput').value = '';
     document.getElementById('confirmPasswordGroup').style.display = 'none';
+    document.getElementById('passwordHintGroup').style.display = 'none';
     
     showNotification("Reset to default settings", "info");
 }
@@ -2058,17 +2923,32 @@ window.onload = function() {
         document.body.classList.add(savedTheme);
     }
     
-    // First check password protection
-    checkPasswordProtection();
+    // Load accounts from localStorage
+    accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+    currentAccountId = localStorage.getItem('currentAccountId');
     
-    // Then initialize the dashboard if unlocked
-    if (document.getElementById('mainDashboard').style.display !== 'none') {
-        initializeDashboard();
+    // If no accounts exist, create a default one
+    if (accounts.length === 0) {
+        createDefaultAccount();
     }
+    
+    // Show home page by default
+    document.getElementById('homePage').style.display = 'flex';
+    document.getElementById('accountsPage').style.display = 'none';
+    document.getElementById('mainDashboard').style.display = 'none';
+    document.getElementById('lockScreen').style.display = 'none';
     
     // Handle password input changes
     document.getElementById('passwordInput').addEventListener('input', toggleConfirmPasswordField);
-};
+    document.getElementById('confirmPasswordInput').addEventListener('input', toggleConfirmPasswordField);
+    document.getElementById('passwordHintInput').addEventListener('input', togglePasswordHintField);
+    document.getElementById('logoUpload').addEventListener('input', function() {
+        const value = this.value.trim();
+        if (value) {
+            document.getElementById('logoPreview').src = value;
+        }
+    });
+}; 
 
 // Handle fullscreen change events
 document.addEventListener('fullscreenchange', function() {
@@ -2078,7 +2958,7 @@ document.addEventListener('fullscreenchange', function() {
     } else {
         exitBtn.style.display = 'none';
     }
-});
+}); 
 </script>
 </body>
 </html>

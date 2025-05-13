@@ -40,6 +40,41 @@
             -webkit-text-size-adjust: 100%;
         }
 
+        /* Back button styles */
+        .back-btn {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            z-index: 100;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            min-width: 44px;
+            min-height: 44px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+        }
+
         /* Home Page Styles */
         .home-page {
             display: flex;
@@ -50,6 +85,7 @@
             padding: 20px;
             text-align: center;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            position: relative;
         }
 
         .home-logo {
@@ -134,7 +170,7 @@
             opacity: 0.7;
         }
 
-        /* Dashboard Styles (existing styles) */
+        /* Dashboard Styles */
         header {
             display: flex;
             flex-wrap: wrap;
@@ -200,6 +236,70 @@
             order: 2;
             flex-wrap: wrap;
             justify-content: flex-end;
+        }
+
+        /* Dropdown Menu Styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-btn {
+            padding: 10px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(117, 209, 106, 0.858);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-btn:hover {
+            background: rgb(149, 223, 122);
+            transform: rotate(90deg);
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: var(--card-bg);
+            min-width: 180px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+        .dropdown-content button {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+            border-radius: 0;
+            margin: 0;
+            justify-content: flex-start;
+            background: transparent;
+            box-shadow: none;
+        }
+
+        .dropdown-content button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: none;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 5px 0;
         }
 
         button {
@@ -604,6 +704,15 @@
             background: #f0f0f0;
         }
 
+        /* Light mode heading adjustments */
+        body.light-mode .home-title {
+            background: linear-gradient(135deg, #e6c200, #2E8B57);
+        }
+
+        body.light-mode .header-title {
+            background: linear-gradient(135deg, #e6c200, #2E8B57);
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -748,7 +857,7 @@
             border-radius: 12px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
             width: 90%;
-            max-width: 500px;
+            max-width: 400px;
             position: relative;
             transform: translateY(-20px);
             transition: transform 0.3s ease;
@@ -760,7 +869,7 @@
 
         .close-modal {
             position: absolute;
-            right: 20px;
+            right: 15px;
             top: 15px;
             color: #aaa;
             font-size: 28px;
@@ -835,23 +944,97 @@
             font-weight: 500;
         }
 
-        .hint-message {
+        .lock-screen .hint-message {
             color: var(--accent-color);
             margin-top: 10px;
             font-size: 14px;
             font-style: italic;
         }
 
-        .attempts-counter {
+        .lock-screen .attempts-counter {
             color: var(--warning-color);
             margin-top: 10px;
             font-weight: 500;
         }
 
-        .lockout-timer {
+        .lock-screen .lockout-timer {
             color: var(--danger-color);
             margin-top: 10px;
             font-weight: 600;
+        }
+
+        /* Welcome Screen Styles */
+        .welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9998;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .welcome-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.5s ease;
+            position: relative;
+        }
+
+        .welcome-logo {
+            height: 100px;
+            width: 100px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .welcome-screen h1 {
+            color: var(--accent-color);
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+
+        .welcome-stats {
+            background: var(--input-bg);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .welcome-stats .stat-item {
+            margin: 15px 0;
+            font-size: 18px;
+        }
+
+        .welcome-stats .stat-label {
+            color: var(--text-color);
+            opacity: 0.8;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .welcome-stats .stat-value {
+            color: var(--accent-color);
+            font-weight: 600;
+            font-size: 22px;
+        }
+
+        /* Accounts Page Styles */
+        .account-list {
+            max-width: 600px;
+            width: 100%;
+            margin: 20px auto;
         }
 
         .account-card {
@@ -892,15 +1075,23 @@
             gap: 10px;
         }
 
-        .account-list {
-            max-width: 600px;
-            width: 100%;
-            margin: 20px auto;
-        }
-
         .add-account-btn {
             margin-top: 20px;
             width: 100%;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .account-actions button {
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .account-actions button:hover {
+            transform: scale(1.1);
+            opacity: 0.9;
         }
 
         /* Responsive adjustments */
@@ -1078,84 +1269,6 @@
                 max-width: 300px;
             }
         }
-        /* Welcome Screen Styles */
-.welcome-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9998;
-    animation: fadeIn 0.5s ease;
-}
-
-.welcome-content {
-    background: var(--card-bg);
-    padding: 30px;
-    border-radius: 15px;
-    text-align: center;
-    max-width: 400px;
-    width: 90%;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    animation: slideUp 0.5s ease;
-}
-
-.welcome-logo {
-    height: 100px;
-    width: 100px;
-    border-radius: 50%;
-    margin-bottom: 20px;
-    border: 3px solid var(--accent-color);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.welcome-screen h1 {
-    color: var(--accent-color);
-    margin-bottom: 25px;
-    font-size: 28px;
-}
-
-.welcome-stats {
-    background: var(--input-bg);
-    border-radius: 10px;
-    padding: 15px;
-    margin: 20px 0;
-}
-
-.welcome-stats .stat-item {
-    margin: 15px 0;
-    font-size: 18px;
-}
-
-.welcome-stats .stat-label {
-    color: var(--text-color);
-    opacity: 0.8;
-    display: block;
-    margin-bottom: 5px;
-}
-
-.welcome-stats .stat-value {
-    color: var(--accent-color);
-    font-weight: 600;
-    font-size: 22px;
-}
-
-@keyframes slideUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-.account-actions button {
-    transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.account-actions button:hover {
-    transform: scale(1.1);
-    opacity: 0.9;
-}
     </style>
     <link rel="shortcut icon" href="logo2.png" type="image/x-icon">
 </head>
@@ -1164,7 +1277,7 @@
     <div class="home-page" id="homePage">
         <img src="logo2.png" alt="Logo" class="home-logo">
         <h1 class="home-title">Transaction Dashboard</h1>
-        <p class="home-subtitle">Track your financial transactions, visualize your capital flow, and manage your profits & losses with ease</p>
+        <p class="home-subtitle">Track your financial transactions, visualize your capital flow, and manage your profits & losses with ease.</p>
         
         <div class="home-buttons">
             <button class="btn-primary" onclick="navigateToDashboard()">
@@ -1208,6 +1321,9 @@
 
     <!-- Accounts Selection Screen -->
     <div class="home-page" id="accountsPage" style="display: none;">
+        <button class="back-btn" onclick="navigateToHome()">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
         <img src="logo2.png" alt="Logo" class="home-logo">
         <h1 class="home-title">Select Account</h1>
         <p class="home-subtitle">Choose an account to access its dashboard</p>
@@ -1219,12 +1335,6 @@
         <button class="btn-primary add-account-btn" onclick="openAddAccountModal()">
             <i class="fas fa-plus"></i> Add New Account
         </button>
-        
-        <div class="home-buttons" style="margin-top: 30px;">
-            <button class="btn-secondary" onclick="navigateToHome()">
-                <i class="fas fa-home"></i> Back to Home
-            </button>
-        </div>
     </div>
 
     <!-- Add Account Modal -->
@@ -1274,33 +1384,39 @@
             </div>
         </div>
     </div>
+
     <!-- Welcome Screen -->
-<div class="welcome-screen" id="welcomeScreen" style="display: none;">
-    <div class="welcome-content">
-        <img src="logo2.png" alt="Logo" class="welcome-logo">
-        <h1 id="welcomeAccountName">Welcome</h1>
-        <div class="welcome-stats">
-            <div class="stat-item">
-                <span class="stat-label">Total Balance</span>
-                <span class="stat-value" id="welcomeTotalPL">$0.00</span>
+    <div class="welcome-screen" id="welcomeScreen" style="display: none;">
+         <button class="back-btn" onclick="navigateToAccounts()">
+        <i class="fas fa-arrow-left"></i> Back
+    </button>
+        <div class="welcome-content">
+            
+            <img src="logo2.png" alt="Logo" class="welcome-logo">
+            <h1 id="welcomeAccountName">Welcome</h1>
+            <div class="welcome-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Total Balance</span>
+                    <span class="stat-value" id="welcomeTotalPL">$0.00</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Pure P&L</span>
+                    <span class="stat-value" id="welcomeTotalCapital">$0.00</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Transactions</span>
+                    <span class="stat-value" id="welcomeTransactionCount">0</span>
+                </div>
             </div>
-            <div class="stat-item">
-                <span class="stat-label">Pure P&L</span>
-                <span class="stat-value" id="welcomeTotalCapital">$0.00</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Transactions</span>
-                <span class="stat-value" id="welcomeTransactionCount">0</span>
-            </div>
+            <button class="btn-primary" onclick="closeWelcomeScreen()">
+                <i class="fas fa-arrow-right"></i> Continue to Dashboard
+            </button>
         </div>
-        <button class="btn-primary" onclick="closeWelcomeScreen()">
-            <i class="fas fa-arrow-right"></i> Continue to Dashboard
-        </button>
     </div>
-</div>
 
     <!-- Lock Screen (shown when password is set) -->
     <div class="lock-screen" id="lockScreen">
+        <button class="back-btn" onclick="navigateToAccounts()" style="width: auto;"><i class="fas fa-arrow-left"></i>Back</button>
         <img src="logo2.png" alt="Logo" class="logo" id="lockScreenLogo">
         <h2>Enter Password to Unlock</h2>
         <input type="password" id="unlockPassword" placeholder="Enter your password" class="form-control">
@@ -1322,24 +1438,35 @@
     <!-- Main Dashboard (hidden when locked) -->
     <div id="mainDashboard" style="display: none;">
         <header>
+            <button class="back-btn" onclick="navigateToAccounts()" style="margin-right: 69px;">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
             <div class="logo-container">
                 <img src="logo2.png" alt="Logo" id="logo" onclick="openSettingsModal()">
                 <h1 id="usernameDisplay">Khukuri Steps</h1>
             </div>
             <h2 class="header-title">Transaction Tracker</h2>
             <div class="header-controls">
-                <button class="btn-secondary theme-toggle-btn" onclick="toggleTheme()">
-                    <i class="fas fa-moon"></i> Toggle Theme
-                </button>
-                <button class="btn-secondary" onclick="openSettingsModal()">
-                    <i class="fas fa-cog"></i> Settings
-                </button>
-                <button class="btn-danger" id="deleteDataBtn">
-                    <i class="fas fa-trash-alt"></i> Clear All
-                </button>
-                <button class="btn-warning" onclick="navigateToAccounts()">
-                    <i class="fas fa-users"></i> Switch Account
-                </button>
+                <div class="dropdown">
+                    <button class="dropdown-btn" onclick="toggleDropdown()">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="dropdown-content" id="dropdownMenu">
+                        <button class="btn-secondary" onclick="toggleTheme()">
+                            <i class="fas fa-moon"></i> Toggle Theme
+                        </button>
+                        <button class="btn-secondary" onclick="openSettingsModal()">
+                            <i class="fas fa-cog"></i> Settings
+                        </button>
+                        <div class="dropdown-divider"></div>
+                        <button class="btn-danger" id="deleteDataBtn">
+                            <i class="fas fa-trash-alt"></i> Clear All
+                        </button>
+                        <button class="btn-warning" onclick="navigateToAccounts()">
+                            <i class="fas fa-users"></i> Switch Account
+                        </button>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -1586,10 +1713,12 @@ function navigateToHome() {
     document.getElementById('accountsPage').style.display = 'none';
     document.getElementById('mainDashboard').style.display = 'none';
     document.getElementById('lockScreen').style.display = 'none';
+    document.getElementById('welcomeScreen').style.display = 'none';
 }
 
 function navigateToAccounts() {
     document.getElementById('mainDashboard').style.display = 'none';
+    document.getElementById('welcomeScreen').style.display = 'none';
     showAccountsPage();
 }
 
@@ -1598,6 +1727,7 @@ function showAccountsPage() {
     document.getElementById('accountsPage').style.display = 'flex';
     document.getElementById('mainDashboard').style.display = 'none';
     document.getElementById('lockScreen').style.display = 'none';
+    document.getElementById('welcomeScreen').style.display = 'none';
     renderAccountsList();
 }
 
@@ -1610,18 +1740,18 @@ function renderAccountsList() {
         accountCard.className = 'account-card';
         accountCard.onclick = (e) => selectAccount(account.id, e);
         
-       accountCard.innerHTML = `
-    <img src="${account.logo || 'logo2.png'}" alt="Account Logo">
-    <div class="account-info">
-        <div class="account-name">${account.name}</div>
-        <small>${account.transactions?.length || 0} transactions</small>
-    </div>
-    <div class="account-actions">
-        <button class="btn-danger btn-sm" onclick="deleteAccount('${account.id}', event); event.stopPropagation();">
-            <i class="fas fa-trash"></i>
-        </button>
-    </div>
-`;
+        accountCard.innerHTML = `
+            <img src="${account.logo || 'logo2.png'}" alt="Account Logo">
+            <div class="account-info">
+                <div class="account-name">${account.name}</div>
+                <small>${account.transactions?.length || 0} transactions</small>
+            </div>
+            <div class="account-actions">
+                <button class="btn-danger btn-sm" onclick="deleteAccount('${account.id}', event); event.stopPropagation();">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
         
         accountList.appendChild(accountCard);
     });
@@ -1657,6 +1787,7 @@ function selectAccount(accountId, event) {
         document.getElementById('accountsPage').style.display = 'none';
         document.getElementById('lockScreen').style.display = 'flex';
         document.getElementById('mainDashboard').style.display = 'none';
+        document.getElementById('welcomeScreen').style.display = 'none';
         document.getElementById('unlockPassword').focus();
         document.getElementById('lockScreenLogo').src = account.logo || 'logo2.png';
         
@@ -1674,6 +1805,7 @@ function selectAccount(accountId, event) {
         // No password, show welcome screen
         document.getElementById('accountsPage').style.display = 'none';
         document.getElementById('mainDashboard').style.display = 'none';
+        document.getElementById('lockScreen').style.display = 'none';
         document.getElementById('usernameDisplay').textContent = account.name;
         document.getElementById('logo').src = account.logo || 'logo2.png';
         showWelcomeScreen(account);
@@ -1787,6 +1919,7 @@ function deleteAccount(accountId, event) {
         showNotification('Account deleted', 'success');
     }
 }
+
 function generateId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
@@ -1819,6 +1952,7 @@ function loadAccount(accountId) {
     saveState();
     initializeDashboard();
 }
+
 function showWelcomeScreen(account) {
     document.getElementById('welcomeScreen').style.display = 'flex';
     document.getElementById('welcomeAccountName').textContent = `Welcome, ${account.name}`;
@@ -2823,30 +2957,6 @@ function closeSettingsModal() {
     }, 300);
 }
 
-// Add event listener for the close button
-document.getElementById('closeSettingsModal').addEventListener('click', function(e) {
-    e.preventDefault();
-    closeSettingsModal();
-});
-
-// Close modal when clicking outside the modal content
-document.getElementById('settingsModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeSettingsModal();
-    }
-});
-
-// Close modal with Escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && document.getElementById('settingsModal').style.display === 'block') {
-        closeSettingsModal();
-    }
-    
-    if (e.key === 'Escape' && document.getElementById('addAccountModal').style.display === 'block') {
-        closeAddAccountModal();
-    }
-});
-
 function saveSettings() {
     const account = getCurrentAccount();
     if (!account) return;
@@ -2937,6 +3047,7 @@ window.onload = function() {
     document.getElementById('accountsPage').style.display = 'none';
     document.getElementById('mainDashboard').style.display = 'none';
     document.getElementById('lockScreen').style.display = 'none';
+    document.getElementById('welcomeScreen').style.display = 'none';
     
     // Handle password input changes
     document.getElementById('passwordInput').addEventListener('input', toggleConfirmPasswordField);
@@ -2958,7 +3069,26 @@ document.addEventListener('fullscreenchange', function() {
     } else {
         exitBtn.style.display = 'none';
     }
-}); 
+});
+
+// Dropdown toggle function
+function toggleDropdown() {
+    const dropdown = document.getElementById('dropdownMenu');
+    dropdown.classList.toggle('show');
+    
+    // Close the dropdown if clicked outside
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropdown-btn') && !event.target.matches('.dropdown-btn *')) {
+            const dropdowns = document.getElementsByClassName("dropdown-content");
+            for (let i = 0; i < dropdowns.length; i++) {
+                const openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+}
 </script>
 </body>
 </html>

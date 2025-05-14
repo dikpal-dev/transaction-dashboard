@@ -62,6 +62,7 @@
             min-height: 44px;
             background: rgba(255, 255, 255, 0.1);
             color: var(--text-color);
+         
         }
 
         .back-btn:hover {
@@ -215,17 +216,16 @@
             background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
             background-size: cover;
             background-clip: text;
-            -webkit-background-clip: text;
+         position: relative;
             color: transparent;
             font-weight: 900;
-            margin: 0 auto;
+            margin: 0;
             text-transform: uppercase;
             letter-spacing: 1px;
-            text-align: center;
-            flex-grow: 1;
-            order: 1;
+        
             width: 100%;
-            padding: 10px 0;
+         
+            align-self: center;
         }
 
         .header-controls {
@@ -240,7 +240,7 @@
 
         /* Dropdown Menu Styles */
         .dropdown {
-            position: relative;
+            position: fixed;
             display: inline-block;
         }
 
@@ -256,6 +256,7 @@
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
+           
         }
 
         .dropdown-btn:hover {
@@ -1269,11 +1270,217 @@
                 max-width: 300px;
             }
         }
+        .header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 1;
+    min-width: 200px;
+}
+
+/* Remove the old logo-container styles and replace with: */
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Update the header layout */
+header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    padding: 15px 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 10;
+    gap: 10px;
+}
+
+.header-title {
+    font-size: 24px;
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+    background-size: cover;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    font-weight: 900;
+    margin: 0 auto;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    flex-grow: 1;
+    order: 1;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    order: 2;
+}
+
+/* Remove the fixed margin from back button */
+.back-btn {
+    position: static;
+    margin: 0;
+}
+@media (max-width: 768px) {
+    .header-title {
+        order: 0;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .header-left {
+        order: 1;
+    }
+    
+    .header-controls {
+        order: 2;
+        margin-left: auto;
+    }
+}
+/* Back button styles for all screens */
+.back-btn {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    z-index: 100;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    min-width: 44px;
+    min-height: 44px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.back-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Specific adjustment for dashboard header */
+
+header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    padding: 15px 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 10;
+    gap: 10px;
+    min-height: 80px; /* Added minimum height */
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    min-width: 200px;
+    order: 0;
+}
+
+.header-title {
+    font-size: 24px;
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    font-weight: 900;
+    margin: 0 auto;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    order: 1;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    order: 2;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.back-btn {
+    position: absolute;
+    right: 80px; /* Adjusted to not overlap with dropdown */
+    top: 20px;
+    z-index: 100;
+}
+
+@media (min-width: 768px) {
+    header {
+        flex-wrap: nowrap;
+        padding: 15px 30px;
+    }
+    
+    .header-title {
+        width: auto;
+        order: 0;
+        padding: 0;
+        margin: 0 20px;
+        font-size: 28px;
+    }
+    
+    .header-controls {
+        position: static;
+        order: 0;
+        margin-left: 20px;
+    }
+    
+    .back-btn {
+        right: 20px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .header-title {
+        font-size: 36px;
+    }
+}
+.back-btn-dashboard{
+ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    right: 20px;
+    top: 20px;
+    margin:3px !important;
+     background: rgba(255, 255, 255, 0.1);
+     color: whitesmoke;
+}
+.back-btn-dashboard:hover{background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);}
+
     </style>
     <link rel="shortcut icon" href="logo2.png" type="image/x-icon">
 </head>
 <body>
-    <!-- Home Page -->
+   
     <div class="home-page" id="homePage">
         <img src="logo2.png" alt="Logo" class="home-logo">
         <h1 class="home-title">Transaction Dashboard</h1>
@@ -1283,9 +1490,9 @@
             <button class="btn-primary" onclick="navigateToDashboard()">
                 <i class="fas fa-tachometer-alt"></i> Go to Dashboard
             </button>
-            <button class="btn-secondary" onclick="toggleTheme()">
+            <!--<button class="btn-secondary" onclick="toggleTheme()">
                 <i class="fas fa-moon"></i> Toggle Theme
-            </button>
+            </button> --> 
         </div>
         
         <div class="home-features">
@@ -1340,7 +1547,7 @@
     <!-- Add Account Modal -->
     <div class="modal" id="addAccountModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeAddAccountModal()">&times;</span>
+            
             <h3 class="section-title">Add New Account</h3>
 
             <div class="form-group">
@@ -1392,7 +1599,7 @@
     </button>
         <div class="welcome-content">
             
-            <img src="logo2.png" alt="Logo" class="welcome-logo">
+            <img src="logo2.png" alt="Logo" class="welcome-logo" id="welcome-logo">
             <h1 id="welcomeAccountName">Welcome</h1>
             <div class="welcome-stats">
                 <div class="stat-item">
@@ -1437,38 +1644,35 @@
 
     <!-- Main Dashboard (hidden when locked) -->
     <div id="mainDashboard" style="display: none;">
-        <header>
-            <button class="back-btn" onclick="navigateToAccounts()" style="margin-right: 69px;">
-                <i class="fas fa-arrow-left"></i> Back
+<header>
+    <div class="logo-container">
+        <img src="logo2.png" alt="Logo" id="logo" onclick="openSettingsModal()">
+        <h1 id="usernameDisplay">Khukuri Steps</h1>
+    </div>
+    <h2 class="header-title">Transaction Tracker</h2>
+    <button class="back-btn-dashboard" onclick="navigateToAccounts()">
+        <i class="fas fa-arrow-left"></i> Back
+    </button>
+    <div class="header-controls">
+        <div class="%">
+            <button class="dropdown-btn" onclick="toggleDropdown()">
+                <i class="fas fa-ellipsis-v"></i>
             </button>
-            <div class="logo-container">
-                <img src="logo2.png" alt="Logo" id="logo" onclick="openSettingsModal()">
-                <h1 id="usernameDisplay">Khukuri Steps</h1>
+            <div class="dropdown-content" id="dropdownMenu">
+                <button class="btn-secondary" onclick="openSettingsModal()">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+                <div class="dropdown-divider"></div>
+                <button class="btn-danger" id="deleteDataBtn">
+                    <i class="fas fa-trash-alt"></i> Clear All
+                </button>
+                <button class="btn-warning" onclick="navigateToAccounts()">
+                    <i class="fas fa-users"></i> Switch Account
+                </button>
             </div>
-            <h2 class="header-title">Transaction Tracker</h2>
-            <div class="header-controls">
-                <div class="dropdown">
-                    <button class="dropdown-btn" onclick="toggleDropdown()">
-                        <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                    <div class="dropdown-content" id="dropdownMenu">
-                        <button class="btn-secondary" onclick="toggleTheme()">
-                            <i class="fas fa-moon"></i> Toggle Theme
-                        </button>
-                        <button class="btn-secondary" onclick="openSettingsModal()">
-                            <i class="fas fa-cog"></i> Settings
-                        </button>
-                        <div class="dropdown-divider"></div>
-                        <button class="btn-danger" id="deleteDataBtn">
-                            <i class="fas fa-trash-alt"></i> Clear All
-                        </button>
-                        <button class="btn-warning" onclick="navigateToAccounts()">
-                            <i class="fas fa-users"></i> Switch Account
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </header>
+        </div>
+    </div>
+</header>
 
         <div class="container">
             <div class="chart-section fade-in">
@@ -1625,7 +1829,7 @@
     <!-- Settings Modal -->
     <div class="modal" id="settingsModal">
         <div class="modal-content">
-            <span class="close-modal" id="closeSettingsModal">&times;</span>
+           
             <h3 class="section-title">Settings</h3>
 
             <div class="form-group">
@@ -1676,7 +1880,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-// Transaction Dashboard - Complete JavaScript Code with all new features
+// Transaction Dashboard - Complete JavaScript Code
 let transactions = [];
 let graphLabels = [];
 let graphData = [];
@@ -1781,6 +1985,12 @@ function selectAccount(accountId, event) {
     isFullHistory = account.isFullHistory || false;
     currentFilter = account.currentFilter || 'all';
 
+    // Update UI elements
+    document.getElementById('usernameDisplay').textContent = account.name;
+    document.getElementById('logo').src = account.logo || 'logo2.png';
+    document.getElementById('welcome-logo').src = account.logo || 'logo2.png';
+    document.getElementById('lockScreenLogo').src = account.logo || 'logo2.png';
+
     // Check if account has password
     if (account.password) {
         document.getElementById('homePage').style.display = 'none';
@@ -1789,7 +1999,6 @@ function selectAccount(accountId, event) {
         document.getElementById('mainDashboard').style.display = 'none';
         document.getElementById('welcomeScreen').style.display = 'none';
         document.getElementById('unlockPassword').focus();
-        document.getElementById('lockScreenLogo').src = account.logo || 'logo2.png';
         
         // Reset unlock UI
         document.getElementById('unlockError').style.display = 'none';
@@ -1806,9 +2015,11 @@ function selectAccount(accountId, event) {
         document.getElementById('accountsPage').style.display = 'none';
         document.getElementById('mainDashboard').style.display = 'none';
         document.getElementById('lockScreen').style.display = 'none';
-        document.getElementById('usernameDisplay').textContent = account.name;
-        document.getElementById('logo').src = account.logo || 'logo2.png';
-        showWelcomeScreen(account);
+        document.getElementById('welcomeScreen').style.display = 'flex';
+        document.getElementById('welcomeAccountName').textContent = `Welcome, ${account.name}`;
+        document.getElementById('welcomeTotalPL').textContent = `$${account.totalPL?.toFixed(2) || '0.00'}`;
+        document.getElementById('welcomeTotalCapital').textContent = `$${account.totalCapital?.toFixed(2) || '0.00'}`;
+        document.getElementById('welcomeTransactionCount').textContent = account.transactions?.length || 0;
     }
 }
 
@@ -1828,6 +2039,8 @@ function openAddAccountModal() {
     document.getElementById('newAccountPasswordHint').value = '';
     document.getElementById('newAccountConfirmPasswordGroup').style.display = 'none';
     document.getElementById('newAccountPasswordHintGroup').style.display = 'none';
+    document.getElementById('welcome-logo').src = account.logo || 'logo2.png';
+document.getElementById('lockScreenLogo').src = account.logo || 'logo2.png';
 }
 
 function closeAddAccountModal() {
@@ -2067,6 +2280,8 @@ function unlockDashboard() {
         document.getElementById('unlockPassword').value = '';
         document.getElementById('attemptsCounter').style.display = 'none';
         document.getElementById('lockoutTimer').style.display = 'none';
+        document.getElementById('welcome-logo').src = account.logo || 'logo2.png';
+document.getElementById('lockScreenLogo').src = account.logo || 'logo2.png';
         
         // Show welcome screen instead of going directly to dashboard
         showWelcomeScreen(account);
@@ -2787,6 +3002,8 @@ function editTransaction(index) {
     showNotification("Editing transaction #" + (index + 1), "info");
     document.getElementById('amountInput').focus();
 }
+
+
 
 function saveEditedTransaction() {
     const index = currentlyEditingIndex;

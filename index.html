@@ -176,18 +176,20 @@
             display: flex;
             flex-wrap: wrap;
             align-items: center;
+            justify-content: space-between;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             padding: 15px 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             position: relative;
             z-index: 10;
             gap: 10px;
+            min-height: 80px;
         }
 
         .logo-container {
             display: flex;
             align-items: center;
-            flex-grow: 1;
+            gap: 10px;
             min-width: 200px;
         }
 
@@ -216,31 +218,26 @@
             background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
             background-size: cover;
             background-clip: text;
-         position: relative;
             color: transparent;
             font-weight: 900;
             margin: 0;
             text-transform: uppercase;
             letter-spacing: 1px;
-        
-            width: 100%;
-         
-            align-self: center;
+            text-align: center;
+            flex-grow: 1;
+            order: 1;
         }
 
         .header-controls {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-left: auto;
             order: 2;
-            flex-wrap: wrap;
-            justify-content: flex-end;
         }
 
         /* Dropdown Menu Styles */
         .dropdown {
-            position: fixed;
+            position: relative;
             display: inline-block;
         }
 
@@ -256,7 +253,6 @@
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-           
         }
 
         .dropdown-btn:hover {
@@ -1095,6 +1091,42 @@
             opacity: 0.9;
         }
 
+        /* Password Change Modal */
+        .password-modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .password-modal.show {
+            opacity: 1;
+        }
+
+        .password-modal-content {
+            background-color: var(--card-bg);
+            margin: 15% auto;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .password-modal.show .password-modal-content {
+            transform: translateY(0);
+        }
+
         /* Responsive adjustments */
         @media (min-width: 768px) {
             .container {
@@ -1254,6 +1286,11 @@
             .feature-card {
                 width: 100%;
             }
+
+            /* Back button text on small screens */
+            .back-btn-dashboard span {
+                display: none;
+            }
         }
 
         /* Orientation-specific adjustments */
@@ -1270,212 +1307,218 @@
                 max-width: 300px;
             }
         }
+
+        /* Back button styles for dashboard */
+        .back-btn-dashboard {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            z-index: 100;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            min-width: 44px;
+            min-height: 44px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+        }
+
+        .back-btn-dashboard:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-btn-dashboard:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (min-width: 768px) {
+            .back-btn-dashboard span {
+                display: inline;
+            }
+        }
+        /* Updated Header Styles */
+        header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 15px 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 10;
+            gap: 10px;
+            min-height: 80px;
+        }
+
         .header-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-grow: 1;
-    min-width: 200px;
-}
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 200px;
+        }
 
-/* Remove the old logo-container styles and replace with: */
-.logo-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+        .header-title {
+            font-size: 24px;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            font-weight: 900;
+            margin: 0 auto;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            flex-grow: 1;
+            order: 1;
+        }
 
-/* Update the header layout */
-header {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    padding: 15px 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    position: relative;
-    z-index: 10;
-    gap: 10px;
-}
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            order: 2;
+        }
 
-.header-title {
-    font-size: 24px;
-    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
-    background-size: cover;
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    font-weight: 900;
-    margin: 0 auto;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-align: center;
-    flex-grow: 1;
-    order: 1;
-}
+        /* Back button styles */
+        .back-btn-dashboard {
+            position: relative;
+            z-index: 100;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            min-width: 44px;
+            min-height: 44px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            margin-right: 10px;
+        }
 
-.header-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    order: 2;
-}
+        .back-btn-dashboard:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
 
-/* Remove the fixed margin from back button */
-.back-btn {
-    position: static;
-    margin: 0;
-}
-@media (max-width: 768px) {
-    .header-title {
-        order: 0;
-        width: 100%;
-        margin-bottom: 10px;
-    }
-    
-    .header-left {
-        order: 1;
-    }
-    
-    .header-controls {
-        order: 2;
-        margin-left: auto;
-    }
-}
-/* Back button styles for all screens */
-.back-btn {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    z-index: 100;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    min-width: 44px;
-    min-height: 44px;
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-color);
-}
+        .back-btn-dashboard:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+        }
 
-.back-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
+        /* Dropdown Menu Styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
 
-.back-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
-}
+        .dropdown-btn {
+            padding: 10px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(117, 209, 106, 0.858);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-/* Specific adjustment for dashboard header */
+        .dropdown-btn:hover {
+            background: rgb(149, 223, 122);
+            transform: rotate(90deg);
+        }
 
-header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    padding: 15px 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    position: relative;
-    z-index: 10;
-    gap: 10px;
-    min-height: 80px; /* Added minimum height */
-}
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: var(--card-bg);
+            min-width: 180px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            animation: fadeIn 0.3s ease;
+        }
 
-.logo-container {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-    min-width: 200px;
-    order: 0;
-}
+        .dropdown-content.show {
+            display: block;
+        }
 
-.header-title {
-    font-size: 24px;
-    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    font-weight: 900;
-    margin: 0 auto;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-align: center;
-    order: 1;
-    width: 100%;
-    padding: 10px 0;
-}
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header-title {
+                order: 0;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .header-left {
+                order: 1;
+            }
+            
+            .header-right {
+                order: 2;
+                margin-left: auto;
+            }
 
-.header-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-left: auto;
-    order: 2;
-    position: absolute;
-    right: 20px;
-    top: 20px;
-}
+            .back-btn-dashboard span {
+                display: none;
+            }
+        }
 
-.back-btn {
-    position: absolute;
-    right: 80px; /* Adjusted to not overlap with dropdown */
-    top: 20px;
-    z-index: 100;
-}
+        @media (min-width: 768px) {
+            header {
+                flex-wrap: nowrap;
+                padding: 15px 30px;
+            }
+            
+            .header-title {
+                width: auto;
+                order: 0;
+                padding: 0;
+                margin: 0 20px;
+                font-size: 28px;
+            }
+            
+            .header-right {
+                order: 0;
+                margin-left: auto;
+            }
+            
+            .back-btn-dashboard span {
+                display: inline;
+            }
+        }
 
-@media (min-width: 768px) {
-    header {
-        flex-wrap: nowrap;
-        padding: 15px 30px;
-    }
-    
-    .header-title {
-        width: auto;
-        order: 0;
-        padding: 0;
-        margin: 0 20px;
-        font-size: 28px;
-    }
-    
-    .header-controls {
-        position: static;
-        order: 0;
-        margin-left: 20px;
-    }
-    
-    .back-btn {
-        right: 20px;
-    }
-}
-
-@media (min-width: 1024px) {
-    .header-title {
-        font-size: 36px;
-    }
-}
-.back-btn-dashboard{
- box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    right: 20px;
-    top: 20px;
-    margin:3px !important;
-     background: rgba(255, 255, 255, 0.1);
-     color: whitesmoke;
-}
-.back-btn-dashboard:hover{background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);}
-
+        @media (min-width: 1024px) {
+            .header-title {
+                font-size: 36px;
+            }
+        }
     </style>
     <link rel="shortcut icon" href="logo2.png" type="image/x-icon">
 </head>
@@ -1643,36 +1686,39 @@ header {
     </div>
 
     <!-- Main Dashboard (hidden when locked) -->
-    <div id="mainDashboard" style="display: none;">
-<header>
-    <div class="logo-container">
-        <img src="logo2.png" alt="Logo" id="logo" onclick="openSettingsModal()">
-        <h1 id="usernameDisplay">Khukuri Steps</h1>
-    </div>
-    <h2 class="header-title">Transaction Tracker</h2>
-    <button class="back-btn-dashboard" onclick="navigateToAccounts()">
-        <i class="fas fa-arrow-left"></i> Back
-    </button>
-    <div class="header-controls">
-        <div class="%">
-            <button class="dropdown-btn" onclick="toggleDropdown()">
-                <i class="fas fa-ellipsis-v"></i>
-            </button>
-            <div class="dropdown-content" id="dropdownMenu">
-                <button class="btn-secondary" onclick="openSettingsModal()">
-                    <i class="fas fa-cog"></i> Settings
-                </button>
-                <div class="dropdown-divider"></div>
-                <button class="btn-danger" id="deleteDataBtn">
-                    <i class="fas fa-trash-alt"></i> Clear All
-                </button>
-                <button class="btn-warning" onclick="navigateToAccounts()">
-                    <i class="fas fa-users"></i> Switch Account
-                </button>
+      <div id="mainDashboard" style="display: none;">
+        <header>
+            <div class="header-left">
+                <img src="logo2.png" alt="Logo" id="logo" onclick="openSettingsModal()">
+                <h1 id="usernameDisplay">Khukuri Steps</h1>
             </div>
-        </div>
-    </div>
-</header>
+            <h2 class="header-title">Transaction Tracker</h2>
+            <div class="header-right">
+                <button class="back-btn-dashboard" onclick="navigateToAccounts()">
+                    <i class="fas fa-arrow-left"></i> <span>Back</span>
+                </button>
+                <div class="dropdown">
+                    <button class="dropdown-btn" onclick="toggleDropdown()">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="dropdown-content" id="dropdownMenu">
+                        <button class="btn-secondary" onclick="openSettingsModal()">
+                            <i class="fas fa-cog"></i> Settings
+                        </button>
+                        <button class="btn-secondary" onclick="openPasswordModal()">
+                            <i class="fas fa-key"></i> Change Password
+                        </button>
+                        <div class="dropdown-divider"></div>
+                        <button class="btn-danger" id="deleteDataBtn">
+                            <i class="fas fa-trash-alt"></i> Clear All
+                        </button>
+                        <button class="btn-warning" onclick="navigateToAccounts()">
+                            <i class="fas fa-users"></i> Switch Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
 
         <div class="container">
             <div class="chart-section fade-in">
@@ -1720,37 +1766,39 @@ header {
 
             <div class="entry-section fade-in">
                 <h3 class="section-title">New Transaction</h3>
-                <div class="form-group">
-                    <label for="dateSelection">Date:</label>
-                    <div class="date-input-container">
-                        <input type="date" id="dateSelection">
-                        <i class="fas fa-calendar-alt calendar-icon"></i>
+                <form id="transactionForm" onsubmit="event.preventDefault(); handleFormSubmit();">
+                    <div class="form-group">
+                        <label for="dateSelection">Date:</label>
+                        <div class="date-input-container">
+                            <input type="date" id="dateSelection" required>
+                            <i class="fas fa-calendar-alt calendar-icon"></i>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="transactionType">Transaction Type:</label>
-                    <select id="transactionType">
-                        <option value="deposit">Deposit</option>
-                        <option value="withdraw">Withdraw</option>
-                        <option value="profit">Profit</option>
-                        <option value="loss">Loss</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="amountInput">Amount ($):</label>
-                    <input type="number" id="amountInput" min="0" step="0.01" placeholder="Enter amount">
-                </div>
-                
-                <div class="form-group">
-                    <label for="descriptionInput">Description (Optional):</label>
-                    <input type="text" id="descriptionInput" placeholder="Enter description">
-                </div>
+                    
+                    <div class="form-group">
+                        <label for="transactionType">Transaction Type:</label>
+                        <select id="transactionType" required>
+                            <option value="deposit">Deposit</option>
+                            <option value="withdraw">Withdraw</option>
+                            <option value="profit">Profit</option>
+                            <option value="loss">Loss</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="amountInput">Amount ($):</label>
+                        <input type="number" id="amountInput" min="0.01" step="0.01" placeholder="Enter amount" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="descriptionInput">Description (Optional):</label>
+                        <input type="text" id="descriptionInput" placeholder="Enter description">
+                    </div>
 
-                <button class="btn-primary" id="submitBtn" onclick="submitTransaction()">
-                    <i class="fas fa-plus-circle"></i> Submit
-                </button>
+                    <button class="btn-primary" id="submitBtn" type="submit">
+                        <i class="fas fa-plus-circle"></i> Submit
+                    </button>
+                </form>
 
                 <div class="stats-display">
                     <div class="stat-item time-elapsed">
@@ -1851,19 +1899,6 @@ header {
                 </div>
             </div>
             
-            <div class="form-group">
-                <label for="passwordInput">Password Protection:</label>
-                <input type="password" id="passwordInput" placeholder="Set a password (leave blank to disable)" oninput="toggleConfirmPasswordField()">
-            </div>
-            <div class="form-group" id="confirmPasswordGroup" style="display: none;">
-                <label for="confirmPasswordInput">Confirm Password:</label>
-                <input type="password" id="confirmPasswordInput" placeholder="Confirm your password">
-            </div>
-            <div class="form-group" id="passwordHintGroup" style="display: none;">
-                <label for="passwordHintInput">Password Hint (Optional):</label>
-                <input type="text" id="passwordHintInput" placeholder="Enter a hint to remember your password">
-            </div>
-            
             <div class="button-group" style="margin-top: 20px;">
                 <button class="btn-primary" onclick="saveSettings()">
                     <i class="fas fa-save"></i> Save
@@ -1872,6 +1907,43 @@ header {
                     <i class="fas fa-undo"></i> Reset
                 </button>
                 <button class="btn-danger" onclick="closeSettingsModal()">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Change Modal -->
+    <div class="password-modal" id="passwordModal">
+        <div class="password-modal-content">
+            <span class="close-modal" onclick="closePasswordModal()">&times;</span>
+            <h3 class="section-title">Change Password</h3>
+
+            <div class="form-group">
+                <label for="currentPassword">Current Password:</label>
+                <input type="password" id="currentPassword" placeholder="Enter current password">
+            </div>
+            
+            <div class="form-group">
+                <label for="newPassword">New Password:</label>
+                <input type="password" id="newPassword" placeholder="Enter new password (leave blank to remove password)">
+            </div>
+            
+            <div class="form-group" id="confirmNewPasswordGroup">
+                <label for="confirmNewPassword">Confirm New Password:</label>
+                <input type="password" id="confirmNewPassword" placeholder="Confirm new password">
+            </div>
+            
+            <div class="form-group" id="newPasswordHintGroup">
+                <label for="newPasswordHint">Password Hint (Optional):</label>
+                <input type="text" id="newPasswordHint" placeholder="Enter a hint to remember your password">
+            </div>
+            
+            <div class="button-group" style="margin-top: 20px;">
+                <button class="btn-primary" onclick="changePassword()">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <button class="btn-danger" onclick="closePasswordModal()">
                     <i class="fas fa-times"></i> Cancel
                 </button>
             </div>
@@ -2348,22 +2420,6 @@ function showLockoutTimer() {
     updateTimer();
 }
 
-function toggleConfirmPasswordField() {
-    const passwordInput = document.getElementById('passwordInput');
-    const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
-    const passwordHintGroup = document.getElementById('passwordHintGroup');
-    
-    if (passwordInput.value.length > 0) {
-        confirmPasswordGroup.style.display = 'block';
-        passwordHintGroup.style.display = 'block';
-    } else {
-        confirmPasswordGroup.style.display = 'none';
-        passwordHintGroup.style.display = 'none';
-        document.getElementById('confirmPasswordInput').value = '';
-        document.getElementById('passwordHintInput').value = '';
-    }
-}
-
 function setupChart() {
     const ctx = document.getElementById('profitLossChart').getContext('2d');
     
@@ -2589,15 +2645,13 @@ function filterTransactions(type) {
 
 function setupEventListeners() {
     document.getElementById('deleteDataBtn').addEventListener('click', confirmDeleteAllData);
-    document.getElementById('amountInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            if (currentlyEditingIndex >= 0) {
-                saveEditedTransaction();
-            } else {
-                submitTransaction();
-            }
-        }
+    
+    // Form submission handler
+    document.getElementById('transactionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        handleFormSubmit();
     });
+    
     document.getElementById('filterAllBtn').addEventListener('click', function() {
         filterTransactions('all');
     });
@@ -2671,6 +2725,14 @@ function setupEventListeners() {
     document.addEventListener('keypress', resetInactivityTimer);
     document.addEventListener('click', resetInactivityTimer);
     document.addEventListener('scroll', resetInactivityTimer);
+}
+
+function handleFormSubmit() {
+    if (currentlyEditingIndex >= 0) {
+        saveEditedTransaction();
+    } else {
+        submitTransaction();
+    }
 }
 
 function resetInactivityTimer() {
@@ -3003,8 +3065,6 @@ function editTransaction(index) {
     document.getElementById('amountInput').focus();
 }
 
-
-
 function saveEditedTransaction() {
     const index = currentlyEditingIndex;
     if (index === undefined || index < 0 || index >= transactions.length) {
@@ -3157,13 +3217,6 @@ function openSettingsModal() {
     document.getElementById('logoUpload').value = account.logo || '';
     document.getElementById('logoPreview').src = account.logo || 'logo2.png';
     document.getElementById('usernamePreview').textContent = account.name || 'Khukuri Steps';
-    
-    // Password fields
-    document.getElementById('passwordInput').value = '';
-    document.getElementById('confirmPasswordInput').value = '';
-    document.getElementById('passwordHintInput').value = account.passwordHint || '';
-    document.getElementById('confirmPasswordGroup').style.display = 'none';
-    document.getElementById('passwordHintGroup').style.display = 'none';
 }
 
 function closeSettingsModal() {
@@ -3174,33 +3227,80 @@ function closeSettingsModal() {
     }, 300);
 }
 
+function openPasswordModal() {
+    const modal = document.getElementById('passwordModal');
+    modal.style.display = 'block';
+    setTimeout(() => {
+        modal.classList.add('show');
+    }, 10);
+    
+    // Reset form
+    document.getElementById('currentPassword').value = '';
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmNewPassword').value = '';
+    document.getElementById('newPasswordHint').value = '';
+    
+    // Load current password hint if exists
+    const account = getCurrentAccount();
+    if (account && account.passwordHint) {
+        document.getElementById('newPasswordHint').value = account.passwordHint;
+    }
+}
+
+function closePasswordModal() {
+    const modal = document.getElementById('passwordModal');
+    modal.classList.remove('show');
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300);
+}
+
+function changePassword() {
+    const account = getCurrentAccount();
+    if (!account) return;
+    
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+    const newPasswordHint = document.getElementById('newPasswordHint').value;
+    
+    // Validate current password if account has one
+    if (account.password && currentPassword !== account.password) {
+        showNotification("Current password is incorrect", "error");
+        return;
+    }
+    
+    // If setting a new password, validate it
+    if (newPassword.length > 0) {
+        if (newPassword !== confirmNewPassword) {
+            showNotification("New passwords do not match", "error");
+            return;
+        }
+        if (newPassword.length < 4) {
+            showNotification("Password must be at least 4 characters", "error");
+            return;
+        }
+        
+        account.password = newPassword;
+        account.passwordHint = newPasswordHint;
+        showNotification("Password changed successfully", "success");
+    } else {
+        // Removing password
+        account.password = '';
+        account.passwordHint = '';
+        showNotification("Password protection removed", "success");
+    }
+    
+    saveAccounts();
+    closePasswordModal();
+}
+
 function saveSettings() {
     const account = getCurrentAccount();
     if (!account) return;
     
     const name = document.getElementById('usernameInput').value.trim();
     const logo = document.getElementById('logoUpload').value.trim() || 'logo2.png';
-    const password = document.getElementById('passwordInput').value;
-    const confirmPassword = document.getElementById('confirmPasswordInput').value;
-    const passwordHint = document.getElementById('passwordHintInput').value;
-    
-    // Validate password if being set
-    if (password.length > 0) {
-        if (password !== confirmPassword) {
-            showNotification("Passwords do not match!", "error");
-            return;
-        }
-        if (password.length < 4) {
-            showNotification("Password must be at least 4 characters", "error");
-            return;
-        }
-        account.password = password;
-        account.passwordHint = passwordHint;
-    } else if (account.password) {
-        // If password field is empty but password exists, remove it
-        account.password = '';
-        account.passwordHint = '';
-    }
     
     if (name) {
         account.name = name;
@@ -3233,13 +3333,6 @@ function resetToDefault() {
     document.getElementById('logoPreview').src = defaultLogo;
     document.getElementById('usernamePreview').textContent = defaultName;
     
-    // Clear password fields
-    document.getElementById('passwordInput').value = '';
-    document.getElementById('confirmPasswordInput').value = '';
-    document.getElementById('passwordHintInput').value = '';
-    document.getElementById('confirmPasswordGroup').style.display = 'none';
-    document.getElementById('passwordHintGroup').style.display = 'none';
-    
     showNotification("Reset to default settings", "info");
 }
 
@@ -3267,9 +3360,6 @@ window.onload = function() {
     document.getElementById('welcomeScreen').style.display = 'none';
     
     // Handle password input changes
-    document.getElementById('passwordInput').addEventListener('input', toggleConfirmPasswordField);
-    document.getElementById('confirmPasswordInput').addEventListener('input', toggleConfirmPasswordField);
-    document.getElementById('passwordHintInput').addEventListener('input', togglePasswordHintField);
     document.getElementById('logoUpload').addEventListener('input', function() {
         const value = this.value.trim();
         if (value) {
@@ -3288,24 +3378,23 @@ document.addEventListener('fullscreenchange', function() {
     }
 });
 
-// Dropdown toggle function
-function toggleDropdown() {
-    const dropdown = document.getElementById('dropdownMenu');
-    dropdown.classList.toggle('show');
-    
-    // Close the dropdown if clicked outside
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropdown-btn') && !event.target.matches('.dropdown-btn *')) {
-            const dropdowns = document.getElementsByClassName("dropdown-content");
-            for (let i = 0; i < dropdowns.length; i++) {
-                const openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
+   function toggleDropdown() {
+            const dropdown = document.getElementById('dropdownMenu');
+            dropdown.classList.toggle('show');
+            
+            // Close the dropdown if clicked outside
+            window.onclick = function(event) {
+                if (!event.target.matches('.dropdown-btn') && !event.target.matches('.dropdown-btn *')) {
+                    const dropdowns = document.getElementsByClassName("dropdown-content");
+                    for (let i = 0; i < dropdowns.length; i++) {
+                        const openDropdown = dropdowns[i];
+                        if (openDropdown.classList.contains('show')) {
+                            openDropdown.classList.remove('show');
+                        }
+                    }
                 }
             }
         }
-    }
-}
 </script>
 </body>
 </html>
